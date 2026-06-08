@@ -3,26 +3,25 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Loopy ✈ 机票实时监控</title>
+  <title>MaxSu 机票实时监控</title>
   <style>
     :root {
       color-scheme: light;
-      --bg: #FFF0F5;
+      --bg: #fff8df;
       --panel: #ffffff;
-      --panel-2: #FFE4EC;
-      --text: #3D2C3D;
-      --muted: #8C6B7A;
-      --line: #F5C6D6;
-      --primary: #FF8FAB;
-      --primary-dark: #E8608C;
-      --primary-soft: #FFD6E4;
-      --accent: #C48BB5;
-      --green: #7BC8A4;
-      --orange: #F2A66A;
-      --red: #E86868;
-      --shadow: 0 12px 34px rgba(200, 130, 160, .12);
-      --radius: 12px;
-      --heart: #FF6B8A;
+      --panel-2: #fff3c4;
+      --text: #241a0b;
+      --muted: #735f35;
+      --line: #ecd996;
+      --primary: #f5b700;
+      --primary-dark: #b97800;
+      --primary-soft: #fff0a8;
+      --accent: #13847f;
+      --green: #11885a;
+      --orange: #c46a00;
+      --red: #c53434;
+      --shadow: 0 12px 34px rgba(23, 32, 51, .1);
+      --radius: 8px;
     }
 
     * {
@@ -34,15 +33,15 @@
       min-height: 100vh;
       font-family: "Microsoft YaHei", "PingFang SC", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at 8% 12%, rgba(255, 143, 171, .15), transparent 320px),
-        radial-gradient(circle at 92% 88%, rgba(196, 139, 181, .12), transparent 300px),
-        radial-gradient(circle at 50% 50%, rgba(255, 214, 228, .25), transparent 400px),
-        linear-gradient(180deg, rgba(255, 214, 228, .5), rgba(255, 240, 245, 0) 360px),
+        radial-gradient(circle at top left, rgba(255, 214, 74, .55), transparent 310px),
+        linear-gradient(180deg, rgba(255, 236, 150, .7), rgba(255, 248, 223, 0) 360px),
         var(--bg);
       color: var(--text);
     }
 
-    button, input, select {
+    button,
+    input,
+    select {
       font: inherit;
     }
 
@@ -52,57 +51,33 @@
       padding: 22px 0 28px;
     }
 
-    /* ── loopy decorations ── */
-    .loopy-floating {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      overflow: hidden;
-      z-index: 0;
-    }
-    .loopy-floating img {
-      position: absolute;
-      opacity: .08;
-    }
-    .loopy-floating img:nth-child(1) { top: 5%; left: 3%; width: 60px; height: 60px; }
-    .loopy-floating img:nth-child(2) { top: 20%; right: 6%; width: 40px; height: 40px; }
-    .loopy-floating img:nth-child(3) { bottom: 15%; left: 8%; width: 50px; height: 50px; }
-    .loopy-floating img:nth-child(4) { bottom: 30%; right: 4%; width: 35px; height: 35px; }
-    .loopy-floating img:nth-child(5) { top: 50%; left: 2%; width: 28px; height: 28px; }
-    .loopy-floating img:nth-child(6) { top: 8%; left: 50%; width: 32px; height: 32px; }
-
     .topbar {
       display: grid;
       grid-template-columns: minmax(220px, 1fr) auto;
       gap: 18px;
       align-items: center;
       margin-bottom: 18px;
-      position: relative;
-      z-index: 1;
     }
 
     .brand {
       display: flex;
-      gap: 14px;
+      gap: 13px;
       align-items: center;
       min-width: 0;
     }
 
     .brand-mark {
-      width: 52px;
-      height: 52px;
-      border-radius: 14px;
-      background: linear-gradient(145deg, #FFB3C6, #E8608C);
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: linear-gradient(145deg, #ffe37a, #f3aa00);
+      color: #4b3200;
       display: grid;
       place-items: center;
-      box-shadow: 0 8px 22px rgba(232, 96, 140, .3);
+      box-shadow: 0 10px 26px rgba(185, 121, 0, .24);
       flex: 0 0 auto;
-      border: 2px solid rgba(255, 255, 255, .85);
+      border: 2px solid rgba(255, 255, 255, .8);
       overflow: hidden;
-      transition: transform .2s ease;
-    }
-    .brand-mark:hover {
-      transform: scale(1.05) rotate(-3deg);
     }
 
     .brand h1 {
@@ -126,16 +101,16 @@
       place-items: center;
       border: 2px solid rgba(255, 255, 255, .86);
       border-radius: 18px 18px 16px 16px;
-      background: linear-gradient(180deg, #FFD6E4, #FF8FAB);
-      color: #6B2E4A;
-      box-shadow: 0 8px 18px rgba(200, 100, 140, .18);
+      background: linear-gradient(180deg, #fff6c9, #ffc533);
+      color: #3d2a05;
+      box-shadow: 0 8px 18px rgba(175, 111, 0, .18);
       font-size: clamp(22px, 3vw, 36px);
       font-weight: 900;
     }
 
     .mascot-letter:nth-child(2n) {
-      background: linear-gradient(180deg, #F0D6FF, #C48BB5);
-      color: #5A2D6B;
+      background: linear-gradient(180deg, #d8fff4, #ffd24f);
+      color: #0d615d;
       transform: translateY(3px);
     }
 
@@ -151,9 +126,23 @@
       border: 2px solid rgba(255, 255, 255, .86);
       z-index: 0;
     }
-    .mascot-letter::before { left: 7px; transform: rotate(-22deg); }
-    .mascot-letter::after { right: 7px; transform: rotate(22deg); }
-    .mascot-letter span { position: relative; z-index: 1; text-shadow: 0 2px 0 rgba(255,255,255,.65); }
+
+    .mascot-letter::before {
+      left: 7px;
+      transform: rotate(-22deg);
+    }
+
+    .mascot-letter::after {
+      right: 7px;
+      transform: rotate(22deg);
+    }
+
+    .mascot-letter span {
+      position: relative;
+      z-index: 1;
+      text-shadow: 0 2px 0 rgba(255, 255, 255, .65);
+    }
+
     .mascot-letter i {
       position: absolute;
       left: 50%;
@@ -165,6 +154,7 @@
       transform: translateX(-50%);
       opacity: .72;
     }
+
     .mascot-letter.tail::after {
       right: -8px;
       top: 22px;
@@ -172,7 +162,7 @@
       height: 12px;
       border-radius: 999px;
       transform: rotate(28deg);
-      background: #FFD6E4;
+      background: #fff3a8;
     }
 
     .brand p {
@@ -187,17 +177,12 @@
       align-items: center;
       min-height: 22px;
       margin-bottom: 5px;
-      padding: 0 10px;
+      padding: 0 8px;
       border-radius: 999px;
-      background: rgba(196, 139, 181, .12);
-      color: #7B3D6B;
-      font-size: 11px;
+      background: rgba(19, 132, 127, .12);
+      color: #0d615d;
+      font-size: 12px;
       font-weight: 800;
-    }
-    .brand-kicker::before {
-      content: "♥";
-      margin-right: 5px;
-      font-size: 10px;
     }
 
     .status-strip {
@@ -213,7 +198,7 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 0 14px;
+      padding: 0 12px;
       border: 1px solid var(--line);
       border-radius: 999px;
       background: rgba(255, 255, 255, .78);
@@ -227,7 +212,7 @@
       height: 8px;
       border-radius: 50%;
       background: var(--green);
-      box-shadow: 0 0 0 5px rgba(123, 200, 164, .13);
+      box-shadow: 0 0 0 5px rgba(17, 136, 90, .13);
     }
 
     .layout {
@@ -235,16 +220,13 @@
       grid-template-columns: 330px minmax(0, 1fr);
       gap: 18px;
       align-items: start;
-      position: relative;
-      z-index: 1;
     }
 
     .panel {
       background: rgba(255, 255, 255, .92);
-      border: 1px solid rgba(245, 198, 214, .9);
+      border: 1px solid rgba(236, 217, 150, .9);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      backdrop-filter: blur(2px);
     }
 
     .side {
@@ -257,7 +239,10 @@
       padding: 16px;
       border-bottom: 1px solid var(--line);
     }
-    .section:last-child { border-bottom: 0; }
+
+    .section:last-child {
+      border-bottom: 0;
+    }
 
     .section h2,
     .content-head h2,
@@ -286,30 +271,28 @@
     }
 
     label {
-      color: #6B3D55;
+      color: #5d4b22;
       font-size: 13px;
       font-weight: 600;
     }
-    label::after {
-      content: " 🩷";
-      font-size: 9px;
-      opacity: .5;
-    }
 
-    input, select {
+    input,
+    select {
       width: 100%;
       height: 42px;
       border: 1px solid var(--line);
-      border-radius: 10px;
+      border-radius: 7px;
       background: #fff;
       color: var(--text);
       padding: 0 11px;
       outline: none;
       transition: border-color .16s ease, box-shadow .16s ease;
     }
-    input:focus, select:focus {
-      border-color: rgba(232, 96, 140, .75);
-      box-shadow: 0 0 0 3px rgba(255, 143, 171, .2);
+
+    input:focus,
+    select:focus {
+      border-color: rgba(185, 121, 0, .75);
+      box-shadow: 0 0 0 3px rgba(245, 183, 0, .2);
     }
 
     .row-2 {
@@ -328,9 +311,9 @@
     .btn {
       height: 42px;
       border: 1px solid transparent;
-      border-radius: 10px;
-      background: linear-gradient(145deg, #FF8FAB, #E8608C);
-      color: #fff;
+      border-radius: 7px;
+      background: var(--primary);
+      color: #3c2800;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
@@ -338,11 +321,12 @@
       gap: 8px;
       font-weight: 700;
       transition: background .16s ease, transform .16s ease, border-color .16s ease;
-      text-shadow: 0 1px 2px rgba(0,0,0,.1);
     }
+
     .btn:hover {
-      background: linear-gradient(145deg, #FF9FB8, #F07098);
+      background: #ffc928;
     }
+
     .btn:active {
       transform: translateY(1px);
     }
@@ -354,9 +338,10 @@
       color: var(--primary-dark);
       border-color: var(--line);
     }
+
     .icon-btn:hover {
-      background: #FFF0F5;
-      border-color: rgba(232, 96, 140, .35);
+      background: #fff8dd;
+      border-color: rgba(185, 121, 0, .35);
     }
 
     .segmented {
@@ -365,23 +350,24 @@
       padding: 4px;
       background: var(--panel-2);
       border: 1px solid var(--line);
-      border-radius: 10px;
+      border-radius: 8px;
       gap: 4px;
     }
+
     .segmented button {
       height: 34px;
       border: 0;
-      border-radius: 8px;
+      border-radius: 6px;
       background: transparent;
       color: var(--muted);
       cursor: pointer;
       font-weight: 700;
-      transition: all .16s ease;
     }
+
     .segmented button.active {
       background: #fff;
-      color: #D45A82;
-      box-shadow: 0 2px 8px rgba(200, 100, 140, .1);
+      color: var(--primary-dark);
+      box-shadow: 0 2px 8px rgba(23, 32, 51, .08);
     }
 
     .checks {
@@ -394,9 +380,10 @@
       display: flex;
       align-items: center;
       gap: 9px;
-      color: #5A3D4A;
+      color: #4f4022;
       font-size: 14px;
     }
+
     .check input {
       width: 17px;
       height: 17px;
@@ -416,6 +403,7 @@
       align-items: center;
       padding: 16px;
     }
+
     .content-head p {
       margin: 6px 0 0;
       color: var(--muted);
@@ -436,9 +424,10 @@
       padding: 0 13px;
       font-weight: 700;
     }
+
     .secondary:hover {
-      background: #FFF0F5;
-      border-color: #E8A0B8;
+      background: #fff8dd;
+      border-color: #e5c764;
     }
 
     .metrics {
@@ -455,25 +444,14 @@
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      box-shadow: 0 8px 22px rgba(200, 130, 160, .07);
-      position: relative;
-      overflow: hidden;
-    }
-    .metric::before {
-      content: "♥";
-      position: absolute;
-      right: -6px;
-      bottom: -8px;
-      font-size: 48px;
-      color: var(--primary-soft);
-      opacity: .3;
-      line-height: 1;
+      box-shadow: 0 8px 22px rgba(23, 32, 51, .07);
     }
 
     .metric span {
       color: var(--muted);
       font-size: 13px;
     }
+
     .metric strong {
       display: block;
       margin-top: 8px;
@@ -481,6 +459,7 @@
       line-height: 1;
       letter-spacing: 0;
     }
+
     .metric small {
       color: var(--green);
       font-weight: 700;
@@ -516,13 +495,12 @@
       grid-template-columns: minmax(280px, .95fr) minmax(0, 1.05fr);
       gap: 0;
       overflow: hidden;
-      border-radius: var(--radius);
     }
 
     .destination-visual {
       min-height: 292px;
       position: relative;
-      background: linear-gradient(135deg, #FFD6E4, #C48BB5);
+      background: #f8d25b;
       border-right: 1px solid var(--line);
     }
 
@@ -541,13 +519,13 @@
       display: inline-flex;
       align-items: center;
       min-height: 28px;
-      padding: 0 12px;
+      padding: 0 10px;
       border-radius: 999px;
       background: rgba(255, 255, 255, .86);
-      color: #6B2E4A;
+      color: #4a3000;
       font-size: 12px;
       font-weight: 800;
-      box-shadow: 0 8px 22px rgba(200, 100, 140, .16);
+      box-shadow: 0 8px 22px rgba(62, 45, 9, .16);
     }
 
     .destination-copy {
@@ -556,7 +534,7 @@
       gap: 12px;
       align-content: center;
       background:
-        linear-gradient(135deg, rgba(255, 214, 228, .86), rgba(255, 255, 255, .92) 54%),
+        linear-gradient(135deg, rgba(255, 242, 171, .86), rgba(255, 255, 255, .92) 54%),
         #fff;
     }
 
@@ -583,31 +561,21 @@
       display: inline-flex;
       align-items: center;
       min-height: 28px;
-      padding: 0 10px;
+      padding: 0 9px;
       border-radius: 999px;
-      background: rgba(196, 139, 181, .1);
-      color: #7B3D6B;
+      background: rgba(19, 132, 127, .1);
+      color: #0d615d;
       font-size: 12px;
       font-weight: 800;
-    }
-
-    .loopy-corner {
-      position: absolute;
-      right: 10px;
-      bottom: 10px;
-      width: 56px;
-      height: 56px;
-      opacity: .12;
-      pointer-events: none;
     }
 
     .ai-panel {
       display: grid;
       gap: 9px;
       padding: 12px;
-      border: 1px solid rgba(245, 198, 214, .9);
-      border-radius: 10px;
-      background: rgba(255, 240, 245, .86);
+      border: 1px solid rgba(236, 217, 150, .9);
+      border-radius: 8px;
+      background: rgba(255, 252, 238, .86);
     }
 
     .ai-row {
@@ -619,7 +587,7 @@
 
     .ai-prompt {
       margin: 0;
-      color: #6B3D55;
+      color: #5d4b22;
       font-size: 12px;
       line-height: 1.55;
     }
@@ -635,9 +603,9 @@
       display: grid;
       align-items: end;
       border: 1px solid var(--line);
-      border-radius: 10px;
+      border-radius: 8px;
       background:
-        linear-gradient(to top, rgba(245, 198, 214, .65) 1px, transparent 1px) 0 0 / 100% 25%,
+        linear-gradient(to top, rgba(236, 217, 150, .65) 1px, transparent 1px) 0 0 / 100% 25%,
         #fff;
       padding: 16px 14px 10px;
     }
@@ -664,9 +632,10 @@
       width: 100%;
       min-height: 16px;
       border-radius: 6px 6px 3px 3px;
-      background: linear-gradient(180deg, #FF8FAB, #C48BB5);
+      background: linear-gradient(180deg, #ffd54d, #13847f);
       position: relative;
     }
+
     .bar-fill::before {
       content: attr(data-price);
       position: absolute;
@@ -694,7 +663,7 @@
       align-items: center;
       padding: 9px;
       border: 1px solid var(--line);
-      border-radius: 10px;
+      border-radius: 8px;
       background: #fff;
     }
 
@@ -706,9 +675,9 @@
       place-items: center;
       color: #fff;
       font-weight: 800;
-      background: linear-gradient(145deg, #FF8FAB, #E8608C);
+      background: var(--primary);
       overflow: hidden;
-      border: 1px solid rgba(245, 198, 214, .9);
+      border: 1px solid rgba(236, 217, 150, .9);
     }
 
     .airline-logo img {
@@ -738,14 +707,15 @@
       min-height: 24px;
       padding: 0 8px;
       border-radius: 999px;
-      background: #F0F5F0;
+      background: #edf7f3;
       color: var(--green);
       font-size: 12px;
       font-weight: 700;
       white-space: nowrap;
     }
+
     .tag.low-cost {
-      background: #FFF5E8;
+      background: #fff5e8;
       color: var(--orange);
     }
 
@@ -755,6 +725,7 @@
       gap: 9px;
       align-items: center;
     }
+
     .carrier-cell .airline-logo {
       width: 34px;
       height: 34px;
@@ -772,9 +743,12 @@
       align-items: center;
       padding: 14px 16px;
       border-bottom: 1px solid var(--line);
-      background: rgba(255, 228, 236, .78);
+      background: rgba(255, 248, 221, .78);
     }
-    .table-toolbar input { height: 38px; }
+
+    .table-toolbar input {
+      height: 38px;
+    }
 
     .table-wrap {
       overflow: auto;
@@ -788,7 +762,8 @@
       background: #fff;
     }
 
-    th, td {
+    th,
+    td {
       padding: 13px 14px;
       border-bottom: 1px solid var(--line);
       text-align: left;
@@ -801,15 +776,15 @@
       position: sticky;
       top: 0;
       z-index: 1;
-      background: #FFE4EC;
-      color: #7B3D6B;
+      background: #fff8dd;
+      color: #65532b;
       font-size: 12px;
       letter-spacing: 0;
       text-transform: uppercase;
     }
 
     tbody tr:hover {
-      background: #FFF0F5;
+      background: #fffbed;
     }
 
     .price {
@@ -818,9 +793,20 @@
       font-weight: 800;
     }
 
-    .change.up { color: var(--red); font-weight: 800; }
-    .change.down { color: var(--green); font-weight: 800; }
-    .warn { color: var(--orange); font-weight: 800; }
+    .change.up {
+      color: var(--red);
+      font-weight: 800;
+    }
+
+    .change.down {
+      color: var(--green);
+      font-weight: 800;
+    }
+
+    .warn {
+      color: var(--orange);
+      font-weight: 800;
+    }
 
     .empty {
       padding: 32px 16px;
@@ -833,11 +819,11 @@
       right: 18px;
       bottom: 18px;
       width: min(360px, calc(100% - 36px));
-      padding: 14px 18px;
-      border-radius: 12px;
-      background: linear-gradient(145deg, #6B3D55, #3D2C3D);
+      padding: 14px 16px;
+      border-radius: 8px;
+      background: #172033;
       color: #fff;
-      box-shadow: 0 12px 34px rgba(61, 44, 61, .25);
+      box-shadow: var(--shadow);
       transform: translateY(18px);
       opacity: 0;
       pointer-events: none;
@@ -846,6 +832,7 @@
       font-size: 14px;
       line-height: 1.45;
     }
+
     .toast.show {
       opacity: 1;
       transform: translateY(0);
@@ -857,31 +844,45 @@
       display: none;
       place-items: center;
       padding: 18px;
-      background: rgba(61, 44, 61, .38);
+      background: rgba(23, 32, 51, .38);
       z-index: 20;
     }
-    .modal-backdrop.open { display: grid; }
+
+    .modal-backdrop.open {
+      display: grid;
+    }
 
     .modal {
       width: min(560px, 100%);
       background: #fff;
-      border-radius: var(--radius);
+      border-radius: 8px;
       border: 1px solid var(--line);
-      box-shadow: 0 12px 34px rgba(200, 130, 160, .2);
+      box-shadow: var(--shadow);
       overflow: hidden;
     }
 
-    .modal-head, .modal-foot {
+    .modal-head,
+    .modal-foot {
       padding: 15px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      background: #FFE4EC;
+      background: #fff8dd;
       border-bottom: 1px solid var(--line);
     }
-    .modal-head h2 { margin: 0; font-size: 17px; }
-    .modal-body { padding: 16px; display: grid; gap: 12px; }
+
+    .modal-head h2 {
+      margin: 0;
+      font-size: 17px;
+    }
+
+    .modal-body {
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+    }
+
     .modal-foot {
       justify-content: flex-end;
       border-top: 1px solid var(--line);
@@ -893,272 +894,320 @@
       resize: vertical;
       width: 100%;
       border: 1px solid var(--line);
-      border-radius: 10px;
+      border-radius: 7px;
       padding: 10px;
       font: 13px Consolas, "Courier New", monospace;
       outline: none;
     }
 
-    /* scrollbar styling */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: #F0C0D0; border-radius: 999px; }
-    ::-webkit-scrollbar-thumb:hover { background: #E0A0B8; }
-
     @media (max-width: 1100px) {
-      .layout, .grid-2, .destination-card {
+      .layout,
+      .grid-2,
+      .destination-card {
         grid-template-columns: 1fr;
       }
-      .side { position: static; }
-      .destination-visual { border-right: 0; border-bottom: 1px solid var(--line); }
-      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+      .side {
+        position: static;
+      }
+
+      .destination-visual {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
     }
 
     @media (max-width: 720px) {
-      .app { width: min(100% - 20px, 1440px); padding-top: 14px; }
-      .topbar, .content-head, .table-toolbar { grid-template-columns: 1fr; }
-      .status-strip, .head-actions { justify-content: flex-start; }
-      .metrics, .row-2 { grid-template-columns: 1fr; }
-      .ai-row { grid-template-columns: 1fr; }
-      .brand-mark { width: 44px; height: 44px; }
-      .chart { gap: 6px; }
-      th, td { padding: 11px 12px; }
+      .app {
+        width: min(100% - 20px, 1440px);
+        padding-top: 14px;
+      }
+
+      .topbar,
+      .content-head,
+      .table-toolbar {
+        grid-template-columns: 1fr;
+      }
+
+      .status-strip,
+      .head-actions {
+        justify-content: flex-start;
+      }
+
+      .metrics,
+      .row-2 {
+        grid-template-columns: 1fr;
+      }
+
+      .ai-row {
+        grid-template-columns: 1fr;
+      }
+
+      .brand-mark {
+        width: 40px;
+        height: 40px;
+      }
+
+      .chart {
+        gap: 6px;
+      }
+
+      th,
+      td {
+        padding: 11px 12px;
+      }
     }
   </style>
 </head>
 <body>
-  <!-- floating loopy decorations -->
-  <div class="loopy-floating" aria-hidden="true">
-    <img src="loopy.jpg" alt="" />
-    <img src="loopy.jpg" alt="" />
-    <img src="loopy.jpg" alt="" />
-    <img src="loopy.jpg" alt="" />
-    <img src="loopy.jpg" alt="" />
-    <img src="loopy.jpg" alt="" />
-  </div>
-
   <main class="app">
     <header class="topbar">
       <div class="brand">
-<div class="brand-mark" id="loopyAvatar" aria-hidden="true"><img src="loopy.jpg" alt="Loopy" style="width:100%;height:100%;object-fit:cover;display:block" /><span class="badge" style="position:absolute;right:-4px;bottom:-4px;width:20px;height:20px;border-radius:50%;background:#FF4D7A;border:2px solid #fff;display:grid;place-items:center;font-size:9px;color:#fff">&#9829;</span>
-
-          
-
-
-
-
-
-
-
-
-
-
-
-            <!-- head -->
-
-            <!-- blush -->
-
-
-            <!-- eyes -->
-
-
-
-
-            <!-- tiny o mouth -->
-
-            <!-- flower -->
-            <g transform="translate(86 22)">
-
-
-
-
-
-
-            </g>
-
+<div class="brand-mark" id="loopyAvatar" aria-hidden="true">
+  <img src="loopy.jpg" alt="Loopy" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:12px" />
         </div>
         <div>
-          <div class="brand-title">
-            <span class="mascot-letter"><span>L</span><i></i></span>
-            <span class="mascot-letter"><span>o</span><i></i></span>
-            <span class="mascot-letter"><span>o</span><i></i></span>
-            <span class="mascot-letter"><span>p</span><i></i></span>
-            <span class="mascot-letter tail"><span>y</span><i></i></span>
-          </div>
-          <p>粉色小浣熊帮你盯着特价机票 ✈</p>
+          <span class="brand-kicker">AI 绘图旅行看板</span>
+          <h1 class="brand-title" aria-label="MaxSu">
+            <span class="mascot-letter"><span>M</span><i></i></span>
+            <span class="mascot-letter"><span>a</span><i></i></span>
+            <span class="mascot-letter tail"><span>x</span><i></i></span>
+            <span class="mascot-letter"><span>S</span><i></i></span>
+            <span class="mascot-letter tail"><span>u</span><i></i></span>
+          </h1>
+          <p>把每一次出发都变成发光的小期待：MaxSu 陪你找低价航班，也用 AI 画出目的地的风、街巷、节庆与人间烟火。</p>
         </div>
       </div>
       <div class="status-strip">
-        <span class="pill"><span class="dot"></span>监控中</span>
-        <span class="pill" id="syncStatus">每 30 秒刷新</span>
-        <span class="pill" id="lastUpdated">--:--:--</span>
+        <span class="pill"><span class="dot"></span><span id="syncStatus">模拟监控运行中</span></span>
+        <span class="pill">更新时间 <strong id="lastUpdated">--:--:--</strong></span>
+        <span class="pill">覆盖 <strong id="airlineCount">0</strong> 家航司</span>
       </div>
     </header>
 
     <div class="layout">
-      <aside class="side">
-        <div class="panel">
-          <form id="searchForm" class="section">
-            <h2>🩷 搜索航班</h2>
-            <p class="section-sub">Loopy 帮你找到最划算的机票</p>
-            <div class="form-grid">
+      <aside class="panel side">
+        <section class="section">
+          <h2>监控条件</h2>
+          <p class="section-sub">选择国内或国际航线、日期和价格阈值后，页面会按设定周期刷新模拟报价。</p>
+          <form class="form-grid" id="searchForm">
+            <div class="row-2">
               <div class="field">
-                <label for="fromCity">出发城市</label>
-                <input type="text" id="fromCity" value="上海" placeholder="例如 上海" />
-              </div>
-              <div class="field">
-                <label for="toCity">目的城市</label>
-                <div class="button-row">
-                  <input type="text" id="toCity" value="东京" placeholder="例如 东京" />
-                  <button type="button" id="swapBtn" class="btn icon-btn" title="交换出发地和目的地">⇄</button>
-                </div>
-              </div>
-              <div class="row-2">
-                <div class="field">
-                  <label for="departDate">出发日期</label>
-                  <input type="date" id="departDate" />
-                </div>
-                <div class="field">
-                  <label for="maxPrice">提醒价 (¥)</label>
-                  <input type="number" id="maxPrice" value="650" min="100" max="99999" />
-                </div>
+                <label for="fromCity">出发地</label>
+                <input id="fromCity" value="上海" list="cityOptions" autocomplete="off" />
               </div>
               <div class="field">
-                <label for="interval">刷新间隔 (秒)</label>
-                <input type="number" id="interval" value="30" min="5" max="600" />
+                <label for="toCity">目的地</label>
+                <input id="toCity" value="东京" list="cityOptions" autocomplete="off" />
               </div>
-              <button type="submit" class="btn">🩷 开始监控</button>
+            </div>
+            <div class="row-2">
+              <div class="field">
+                <label for="departDate">出发日期</label>
+                <input id="departDate" type="date" />
+              </div>
+              <div class="field">
+                <label for="tripType">行程类型</label>
+                <select id="tripType">
+                  <option>单程</option>
+                  <option>往返</option>
+                  <option>多程</option>
+                </select>
+              </div>
+            </div>
+            <div class="row-2">
+              <div class="field">
+                <label for="maxPrice">提醒价</label>
+                <input id="maxPrice" type="number" min="1" value="650" />
+              </div>
+              <div class="field">
+                <label for="interval">刷新间隔</label>
+                <select id="interval">
+                  <option value="15">15 秒</option>
+                  <option value="30" selected>30 秒</option>
+                  <option value="60">1 分钟</option>
+                  <option value="300">5 分钟</option>
+                </select>
+              </div>
+            </div>
+            <datalist id="cityOptions">
+              <option value="上海"></option>
+              <option value="北京"></option>
+              <option value="广州"></option>
+              <option value="深圳"></option>
+              <option value="成都"></option>
+              <option value="杭州"></option>
+              <option value="重庆"></option>
+              <option value="西安"></option>
+              <option value="香港"></option>
+              <option value="台北"></option>
+              <option value="东京"></option>
+              <option value="大阪"></option>
+              <option value="首尔"></option>
+              <option value="新加坡"></option>
+              <option value="曼谷"></option>
+              <option value="吉隆坡"></option>
+              <option value="马尼拉"></option>
+              <option value="胡志明"></option>
+              <option value="迪拜"></option>
+              <option value="多哈"></option>
+              <option value="伊斯坦布尔"></option>
+              <option value="伦敦"></option>
+              <option value="巴黎"></option>
+              <option value="阿姆斯特丹"></option>
+              <option value="法兰克福"></option>
+              <option value="纽约"></option>
+              <option value="洛杉矶"></option>
+              <option value="旧金山"></option>
+              <option value="温哥华"></option>
+              <option value="悉尼"></option>
+              <option value="墨尔本"></option>
+            </datalist>
+            <div class="field">
+              <label>舱位偏好</label>
+              <div class="segmented" role="group" aria-label="舱位偏好">
+                <button type="button" class="active" data-cabin="经济舱">经济舱</button>
+                <button type="button" data-cabin="超级经济舱">超经舱</button>
+                <button type="button" data-cabin="商务舱">商务舱</button>
+              </div>
+            </div>
+            <div class="button-row">
+              <button class="btn" type="submit">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M21 21 16.6 16.6M19 11a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                开始监控
+              </button>
+              <button class="btn icon-btn" type="button" id="swapBtn" title="交换出发地和目的地">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M7 7h13l-4-4M17 17H4l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
             </div>
           </form>
+        </section>
 
-          <div class="section">
-            <h2>🩷 舱位选择</h2>
-            <div class="segmented" style="margin-top:12px">
-              <button type="button" data-cabin="经济舱" class="active">经济舱</button>
-              <button type="button" data-cabin="超级经济舱">超级经济</button>
-              <button type="button" data-cabin="商务舱">商务舱</button>
-            </div>
+        <section class="section">
+          <h2>筛选项</h2>
+          <div class="checks" id="filters">
+            <label class="check"><input type="checkbox" value="direct" checked /> 只看直飞</label>
+            <label class="check"><input type="checkbox" value="baggage" /> 含托运行李</label>
+            <label class="check"><input type="checkbox" value="refundable" /> 可退改优先</label>
+            <label class="check"><input type="checkbox" value="alert" /> 只看触发提醒</label>
           </div>
+        </section>
 
-          <div class="section">
-            <h2>🩷 筛选条件</h2>
-            <div class="checks" id="filters">
-              <label class="check">
-                <input type="checkbox" value="direct" /> 仅直飞
-              </label>
-              <label class="check">
-                <input type="checkbox" value="baggage" /> 含行李额
-              </label>
-              <label class="check">
-                <input type="checkbox" value="refundable" /> 可退改签
-              </label>
-              <label class="check">
-                <input type="checkbox" value="alert" /> 仅看低价提醒
-              </label>
-            </div>
+        <section class="section">
+          <h2>数据源状态</h2>
+          <p class="section-sub">实际上线时可接入航司官网 API、GDS、OTA 或企业差旅接口。</p>
+          <div class="checks">
+            <label class="check"><input type="checkbox" checked /> 航司直连</label>
+            <label class="check"><input type="checkbox" checked /> GDS / NDC</label>
+            <label class="check"><input type="checkbox" checked /> OTA 聚合</label>
+            <label class="check"><input type="checkbox" checked /> 企业协议价</label>
           </div>
-
-          <div class="section">
-            <h2>🩷 热门航线</h2>
-            <div class="airline-list" id="airlineList"></div>
-          </div>
-        </div>
+        </section>
       </aside>
 
-      <div class="content">
-        <div class="panel">
-          <div class="destination-card">
-            <div class="destination-visual">
-              <img id="destinationPhoto" src="" alt="" />
-              <span class="destination-badge" id="destinationBadge">🎌 AI 景点图</span>
-              <!-- loopy mini avatar in corner -->
-              
-                <ellipse cx="30" cy="28" rx="16" ry="14" fill="#FFD6E1"/>
-                <circle cx="22" cy="26" r="2" fill="#3D2C3D"/>
-                <circle cx="38" cy="26" r="2" fill="#3D2C3D"/>
-                <ellipse cx="30" cy="33" rx="2.5" ry="2" fill="#D45A82"/>
-                <ellipse cx="16" cy="32" rx="4" ry="2.5" fill="#E8608C" opacity=".3"/>
-                <ellipse cx="44" cy="32" rx="4" ry="2.5" fill="#E8608C" opacity=".3"/>
-              </svg>
-            </div>
-            <div class="destination-copy">
-              <div class="destination-meta" id="destinationChips"></div>
-              <h2 id="destinationTitle">🎌 东京民俗风情景点照</h2>
-              <p id="destinationDesc">融合传统与现代的都市魅力，樱花、浅草、秋叶原交织出独特风景。</p>
-              <div class="ai-panel">
-                <div class="ai-row">
-                  <p class="ai-prompt" id="destinationPrompt">🎨 AI 正在分析东京的民俗特色与地标元素...</p>
-                  <span class="ai-status" id="aiStatus">AI 绘图已更新</span>
-                </div>
-                <button type="button" id="aiDrawBtn" class="btn secondary" style="height:34px;font-size:12px">
-                  🩷 重新生成景点图
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="content-head panel">
+      <section class="content">
+        <div class="panel content-head">
           <div>
-            <h2 id="routeTitle">📍 上海 → 东京</h2>
-            <p id="routeSub">正在监控 2026-06-05 的国际经济舱机票价格，价格为演示数据。</p>
+            <h2 id="routeTitle">上海 SHA/PVG → 东京 HND/NRT</h2>
+            <p id="routeSub">正在监控 2026-05-01 的经济舱机票价格，价格为演示数据。</p>
           </div>
           <div class="head-actions">
-            <button type="button" class="btn secondary" id="exportBtn">📥 导出 CSV</button>
-            <button type="button" class="btn secondary" id="apiBtn">🔌 API 配置</button>
+            <button class="btn secondary" type="button" id="apiBtn">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M8 9H6a3 3 0 0 0 0 6h2M16 9h2a3 3 0 1 1 0 6h-2M9 12h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              接口配置
+            </button>
+            <button class="btn secondary" type="button" id="exportBtn">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              导出 CSV
+            </button>
           </div>
         </div>
 
+        <article class="panel destination-card">
+          <div class="destination-visual">
+            <img id="destinationPhoto" alt="目的地民俗风情景点照" />
+            <span class="destination-badge" id="destinationBadge">AI 绘制中</span>
+          </div>
+          <div class="destination-copy">
+            <div>
+              <h2 id="destinationTitle">东京民俗风情景点照</h2>
+              <p id="destinationDesc">融合浅草寺、鸟居、灯笼街景与和服出行氛围，帮助出发前快速感受当地风情。</p>
+            </div>
+            <div class="destination-meta" id="destinationChips"></div>
+            <div class="ai-panel">
+              <div class="ai-row">
+                <span class="ai-status" id="aiStatus">已根据当前目的地生成 AI 绘图提示词</span>
+                <button class="btn secondary" type="button" id="aiDrawBtn">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M12 3l1.6 4.1L18 8.7l-4.1 1.7L12 15l-1.9-4.6L6 8.7l4.4-1.6L12 3ZM18 14l.9 2.1L21 17l-2.1.9L18 20l-.9-2.1L15 17l2.1-.9L18 14ZM6 13l.8 1.8L9 16l-2.2 1.2L6 19l-.8-1.8L3 16l2.2-1.2L6 13Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                  </svg>
+                  AI 绘制
+                </button>
+              </div>
+              <p class="ai-prompt" id="destinationPrompt"></p>
+            </div>
+          </div>
+        </article>
+
         <div class="metrics">
-          <div class="metric">
-            <span>🩷 最低价</span>
+          <article class="metric">
+            <span>当前最低价</span>
             <strong id="minPrice">¥--</strong>
             <small id="minCarrier">--</small>
-          </div>
-          <div class="metric">
-            <span>🩷 平均价</span>
+          </article>
+          <article class="metric">
+            <span>平均价格</span>
             <strong id="avgPrice">¥--</strong>
-            <small>均价参考</small>
-          </div>
-          <div class="metric">
-            <span>🩷 低价提醒</span>
+            <small>含燃油及机建估算</small>
+          </article>
+          <article class="metric">
+            <span>触发提醒</span>
             <strong id="alertCount">0</strong>
             <small>低于提醒价</small>
-          </div>
-          <div class="metric">
-            <span>🩷 航班数</span>
+          </article>
+          <article class="metric">
+            <span>可订航班</span>
             <strong id="flightCount">0</strong>
-            <small id="airlineCount">0 家航司</small>
-          </div>
+            <small>实时刷新列表</small>
+          </article>
         </div>
 
         <div class="grid-2">
-          <div class="panel">
-            <div class="card">
-              <div class="card-head">
-                <h3>📈 价格趋势预测</h3>
-                <span class="muted">未来 7 天</span>
-              </div>
-              <div class="chart-wrap">
-                <div class="chart" id="chart"></div>
-              </div>
+          <article class="panel card">
+            <div class="card-head">
+              <h3>7 日低价趋势</h3>
+              <span class="muted" id="trendHint">按当前航线生成</span>
             </div>
-          </div>
-          <div class="panel">
-            <div class="card">
-              <div class="card-head">
-                <h3>🩷 航司排名</h3>
-                <span class="muted">按最低价排序</span>
-              </div>
-              <div class="airline-list" id="airlineList2"></div>
+            <div class="chart-wrap">
+              <div class="chart" id="chart"></div>
             </div>
-          </div>
+          </article>
+
+          <article class="panel card">
+            <div class="card-head">
+              <h3>航司覆盖</h3>
+              <span class="muted">含国际航司与廉航</span>
+            </div>
+            <div class="airline-list" id="airlineList"></div>
+          </article>
         </div>
 
-        <div class="panel table-card">
+        <article class="panel table-card">
           <div class="table-toolbar">
-            <input type="text" id="tableSearch" placeholder="🔍 搜索航班、航司、机型..." />
-            <span class="muted" id="resultText">0 条结果</span>
+            <input id="tableSearch" placeholder="搜索航司、航班号、机场或机型" autocomplete="off" />
+            <span class="muted" id="resultText">-- 条结果</span>
           </div>
           <div class="table-wrap">
             <table>
@@ -1167,7 +1216,7 @@
                   <th>航司</th>
                   <th>航班</th>
                   <th>时间</th>
-                  <th>航线</th>
+                  <th>机场</th>
                   <th>机型</th>
                   <th>舱位</th>
                   <th>价格</th>
@@ -1178,52 +1227,173 @@
               <tbody id="flightRows"></tbody>
             </table>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="toast" id="toast">
-    <img src="loopy.jpg" style="width:24px;height:24px;border-radius:50%;object-fit:cover;flex:0 0 auto" alt="" />
-    <span id="toastMessage"></span>
-  </div>
-
-  <div class="loopy-popup" id="loopyPopup" style="position:fixed;right:20px;bottom:80px;z-index:50;cursor:pointer">
-    <img src="loopy.jpg" style="width:52px;height:52px;border-radius:50%;object-fit:cover;border:3px solid #fff;box-shadow:0 6px 20px rgba(232,90,122,.25)" alt="Loopy" />
-    <span style="position:absolute;right:58px;top:50%;transform:translateY(-50%);background:#fff;border:1px solid var(--line);border-radius:12px 12px 12px 4px;padding:6px 12px;white-space:nowrap;font-size:12px;color:var(--text);opacity:0;pointer-events:none;transition:opacity .3s" class="popup-bubble">&#9829; 嗨！</span>
-  </div>
-
-    <div class="modal-backdrop" id="apiModal">
-      <div class="modal">
-        <div class="modal-head">
-          <h2>🔌 API 配置</h2>
-          <button type="button" id="closeApi" class="btn secondary" style="height:34px;padding:0 12px;font-size:12px">关闭</button>
-        </div>
-        <div class="modal-body">
-          <div class="field">
-            <label for="apiUrl">API 地址</label>
-            <input type="url" id="apiUrl" placeholder="https://api.example.com/flights" />
-          </div>
-          <div class="field">
-            <label for="apiToken">Token</label>
-            <input type="password" id="apiToken" placeholder="Bearer token" />
-          </div>
-          <div class="field">
-            <label for="apiMapping">JSON 映射 (字段映射)</label>
-            <textarea class="api-box" id="apiMapping" placeholder='{"price":"amount","airline":"carrier","flightNo":"flight_number","depart":"departure_time","arrive":"arrival_time","route":"routing"}'></textarea>
-          </div>
-        </div>
-        <div class="modal-foot">
-          <button type="button" id="resetApi" class="btn secondary" style="height:36px">重置</button>
-          <button type="button" id="saveApi" class="btn" style="height:36px">保存配置</button>
-        </div>
-      </div>
+        </article>
+      </section>
     </div>
   </main>
 
+  <div class="modal-backdrop" id="apiModal" role="dialog" aria-modal="true" aria-labelledby="apiTitle">
+    <div class="modal">
+      <div class="modal-head">
+        <h2 id="apiTitle">接口配置</h2>
+        <button class="btn icon-btn" type="button" id="closeApi" title="关闭">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label for="apiUrl">报价接口地址</label>
+          <input id="apiUrl" placeholder="例如：https://api.example.com/flights/search" />
+        </div>
+        <div class="field">
+          <label for="apiToken">访问令牌</label>
+          <input id="apiToken" placeholder="Bearer token / API key" />
+        </div>
+        <div class="field">
+          <label for="apiMapping">返回字段映射</label>
+          <textarea id="apiMapping" class="api-box">{
+  "airline": "carrierName",
+  "flightNo": "flightNumber",
+  "price": "totalPrice",
+  "departTime": "departureTime"
+}</textarea>
+        </div>
+        <p class="section-sub">这个静态页面不会向外发送请求。接入真实接口时，可把配置交给后端代理服务，避免在浏览器暴露密钥。</p>
+      </div>
+      <div class="modal-foot">
+        <button class="btn secondary" type="button" id="resetApi">重置</button>
+        <button class="btn" type="button" id="saveApi">保存配置</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
   <script>
-    const el = {};
-    const ids = ["fromCity","toCity","departDate","maxPrice","interval","destinationPhoto","destinationBadge","destinationTitle","destinationDesc","destinationChips","destinationPrompt","aiStatus","aiDrawBtn","routeTitle","routeSub","minPrice","minCarrier","avgPrice","alertCount","flightCount","airlineCount","chart","airlineList","airlineList2","tableSearch","resultText","flightRows","lastUpdated","syncStatus","toast","apiModal","closeApi","saveApi","resetApi","exportBtn","apiBtn","swapBtn"];
-    ids.forEach(id => { el[id] = document.getElementById(id); });
+    const logoFor = domain => `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+
+    const airlines = [
+      { code: "CA", name: "中国国际航空", color: "#be1e2d", domain: "airchina.com.cn", region: "中国" },
+      { code: "MU", name: "中国东方航空", color: "#1f69b3", domain: "ceair.com", region: "中国" },
+      { code: "CZ", name: "中国南方航空", color: "#0f86c6", domain: "csair.com", region: "中国" },
+      { code: "HU", name: "海南航空", color: "#bb8a22", domain: "hainanairlines.com", region: "中国" },
+      { code: "ZH", name: "深圳航空", color: "#c7182f", domain: "shenzhenair.com", region: "中国" },
+      { code: "MF", name: "厦门航空", color: "#1687a7", domain: "xiamenair.com", region: "中国" },
+      { code: "3U", name: "四川航空", color: "#d0472f", domain: "sichuanair.com", region: "中国" },
+      { code: "FM", name: "上海航空", color: "#d62828", domain: "shanghai-air.com", region: "中国" },
+      { code: "9C", name: "春秋航空", color: "#18a558", domain: "ch.com", region: "中国", lowCost: true },
+      { code: "JD", name: "首都航空", color: "#7448a8", domain: "jdair.net", region: "中国" },
+      { code: "GS", name: "天津航空", color: "#186f65", domain: "tianjin-air.com", region: "中国" },
+      { code: "KN", name: "中国联合航空", color: "#536d7a", domain: "flycua.com", region: "中国", lowCost: true },
+      { code: "CX", name: "国泰航空", color: "#006564", domain: "cathaypacific.com", region: "中国香港" },
+      { code: "UO", name: "香港快运航空", color: "#6f2381", domain: "hkexpress.com", region: "中国香港", lowCost: true },
+      { code: "CI", name: "中华航空", color: "#c42a35", domain: "china-airlines.com", region: "中国台湾" },
+      { code: "BR", name: "长荣航空", color: "#007c5a", domain: "evaair.com", region: "中国台湾" },
+      { code: "JL", name: "日本航空", color: "#d71920", domain: "jal.co.jp", region: "日本" },
+      { code: "NH", name: "全日空", color: "#143f8f", domain: "ana.co.jp", region: "日本" },
+      { code: "KE", name: "大韩航空", color: "#4b8fcc", domain: "koreanair.com", region: "韩国" },
+      { code: "OZ", name: "韩亚航空", color: "#7a182b", domain: "flyasiana.com", region: "韩国" },
+      { code: "SQ", name: "新加坡航空", color: "#0b3f8c", domain: "singaporeair.com", region: "新加坡" },
+      { code: "TR", name: "酷航", color: "#f2c300", domain: "flyscoot.com", region: "新加坡", lowCost: true },
+      { code: "AK", name: "亚洲航空", color: "#e31b23", domain: "airasia.com", region: "马来西亚", lowCost: true },
+      { code: "5J", name: "宿务太平洋航空", color: "#f4c400", domain: "cebupacificair.com", region: "菲律宾", lowCost: true },
+      { code: "VN", name: "越南航空", color: "#006b68", domain: "vietnamairlines.com", region: "越南" },
+      { code: "VJ", name: "越捷航空", color: "#d71920", domain: "vietjetair.com", region: "越南", lowCost: true },
+      { code: "TG", name: "泰国国际航空", color: "#6b2b8f", domain: "thaiairways.com", region: "泰国" },
+      { code: "EK", name: "阿联酋航空", color: "#d71920", domain: "emirates.com", region: "阿联酋" },
+      { code: "QR", name: "卡塔尔航空", color: "#5c0f35", domain: "qatarairways.com", region: "卡塔尔" },
+      { code: "EY", name: "阿提哈德航空", color: "#8a6f31", domain: "etihad.com", region: "阿联酋" },
+      { code: "TK", name: "土耳其航空", color: "#c8102e", domain: "turkishairlines.com", region: "土耳其" },
+      { code: "LH", name: "汉莎航空", color: "#05164d", domain: "lufthansa.com", region: "德国" },
+      { code: "AF", name: "法国航空", color: "#002157", domain: "airfrance.com", region: "法国" },
+      { code: "KL", name: "荷兰皇家航空", color: "#00a1de", domain: "klm.com", region: "荷兰" },
+      { code: "BA", name: "英国航空", color: "#075aaa", domain: "britishairways.com", region: "英国" },
+      { code: "U2", name: "易捷航空", color: "#ff6900", domain: "easyjet.com", region: "英国", lowCost: true },
+      { code: "FR", name: "瑞安航空", color: "#073590", domain: "ryanair.com", region: "爱尔兰", lowCost: true },
+      { code: "W6", name: "维兹航空", color: "#c6007e", domain: "wizzair.com", region: "匈牙利", lowCost: true },
+      { code: "DL", name: "达美航空", color: "#c8102e", domain: "delta.com", region: "美国" },
+      { code: "UA", name: "美国联合航空", color: "#005daa", domain: "united.com", region: "美国" },
+      { code: "AA", name: "美国航空", color: "#0078d2", domain: "aa.com", region: "美国" },
+      { code: "NK", name: "精神航空", color: "#ffe100", domain: "spirit.com", region: "美国", lowCost: true },
+      { code: "F9", name: "边疆航空", color: "#24844b", domain: "flyfrontier.com", region: "美国", lowCost: true },
+      { code: "AC", name: "加拿大航空", color: "#d71920", domain: "aircanada.com", region: "加拿大" },
+      { code: "QF", name: "澳洲航空", color: "#e4002b", domain: "qantas.com", region: "澳大利亚" },
+      { code: "JQ", name: "捷星航空", color: "#ff7900", domain: "jetstar.com", region: "澳大利亚", lowCost: true }
+    ];
+
+    airlines.forEach(airline => {
+      airline.logo = logoFor(airline.domain);
+    });
+
+    const airports = {
+      "上海": { codes: ["SHA", "PVG"], country: "CN" },
+      "北京": { codes: ["PEK", "PKX"], country: "CN" },
+      "广州": { codes: ["CAN"], country: "CN" },
+      "深圳": { codes: ["SZX"], country: "CN" },
+      "成都": { codes: ["CTU", "TFU"], country: "CN" },
+      "杭州": { codes: ["HGH"], country: "CN" },
+      "重庆": { codes: ["CKG"], country: "CN" },
+      "西安": { codes: ["XIY"], country: "CN" },
+      "香港": { codes: ["HKG"], country: "HK" },
+      "台北": { codes: ["TPE", "TSA"], country: "TW" },
+      "东京": { codes: ["HND", "NRT"], country: "JP" },
+      "大阪": { codes: ["KIX", "ITM"], country: "JP" },
+      "首尔": { codes: ["ICN", "GMP"], country: "KR" },
+      "新加坡": { codes: ["SIN"], country: "SG" },
+      "曼谷": { codes: ["BKK", "DMK"], country: "TH" },
+      "吉隆坡": { codes: ["KUL"], country: "MY" },
+      "马尼拉": { codes: ["MNL"], country: "PH" },
+      "胡志明": { codes: ["SGN"], country: "VN" },
+      "迪拜": { codes: ["DXB"], country: "AE" },
+      "多哈": { codes: ["DOH"], country: "QA" },
+      "伊斯坦布尔": { codes: ["IST"], country: "TR" },
+      "伦敦": { codes: ["LHR", "LGW"], country: "GB" },
+      "巴黎": { codes: ["CDG", "ORY"], country: "FR" },
+      "阿姆斯特丹": { codes: ["AMS"], country: "NL" },
+      "法兰克福": { codes: ["FRA"], country: "DE" },
+      "纽约": { codes: ["JFK", "EWR"], country: "US" },
+      "洛杉矶": { codes: ["LAX"], country: "US" },
+      "旧金山": { codes: ["SFO"], country: "US" },
+      "温哥华": { codes: ["YVR"], country: "CA" },
+      "悉尼": { codes: ["SYD"], country: "AU" },
+      "墨尔本": { codes: ["MEL"], country: "AU" }
+    };
+
+    const destinationScenes = {
+      "上海": { landmark: "豫园与石库门街巷", folk: "海派灯会", palette: ["#f5b700", "#c83f31", "#13847f"], icon: "garden", desc: "把豫园飞檐、石库门街巷、海派灯会和市集烟火感放进一张明亮的旅行风情图。", chips: ["豫园", "海派灯会", "石库门"] },
+      "北京": { landmark: "天坛与胡同", folk: "京味庙会", palette: ["#e0ad15", "#b51d2a", "#246a73"], icon: "temple", desc: "以天坛祈年殿、胡同院落和庙会灯彩为核心，呈现厚重又热闹的京味民俗。", chips: ["天坛", "胡同", "庙会"] },
+      "广州": { landmark: "陈家祠与骑楼", folk: "醒狮巡游", palette: ["#ffc928", "#cc3d2b", "#0f7f68"], icon: "lion", desc: "融合陈家祠屋脊、岭南骑楼、醒狮和花市色彩，突出广府民俗风情。", chips: ["陈家祠", "醒狮", "花市"] },
+      "深圳": { landmark: "湾区海岸与甘坑客家小镇", folk: "客家围屋", palette: ["#ffd34d", "#13847f", "#345995"], icon: "coast", desc: "用滨海天际线、客家围屋和市集灯火，表现年轻城市里的本土风情。", chips: ["滨海", "客家围屋", "灯火市集"] },
+      "成都": { landmark: "宽窄巷子与锦里", folk: "川剧变脸", palette: ["#f2b705", "#c23b2e", "#3a7d44"], icon: "opera", desc: "宽窄巷子、锦里灯笼、川剧变脸与茶馆竹椅交织成巴蜀烟火气。", chips: ["宽窄巷子", "川剧", "茶馆"] },
+      "杭州": { landmark: "西湖断桥", folk: "龙井茶会", palette: ["#f6c43d", "#86a873", "#326b70"], icon: "lake", desc: "西湖水面、断桥、龙井茶席和丝伞行人构成江南温润的民俗画面。", chips: ["西湖", "龙井茶", "丝伞"] },
+      "重庆": { landmark: "洪崖洞", folk: "山城夜市", palette: ["#f5b700", "#d94f30", "#214f5f"], icon: "stilt", desc: "吊脚楼层叠灯火、山城步道和热辣夜市，呈现重庆立体又热闹的风情。", chips: ["洪崖洞", "吊脚楼", "夜市"] },
+      "西安": { landmark: "古城墙与钟楼", folk: "唐风巡游", palette: ["#e9af22", "#8f2f24", "#48643c"], icon: "wall", desc: "古城墙、钟楼剪影、唐风服饰和鼓乐巡游，带出十三朝古都的节庆感。", chips: ["古城墙", "唐风", "鼓乐"] },
+      "香港": { landmark: "维港与庙街", folk: "霓虹市井", palette: ["#ffc400", "#d9365f", "#126f80"], icon: "harbor", desc: "维港轮渡、庙街招牌、茶餐厅色彩与节庆灯火组合成港味旅行照。", chips: ["维港", "庙街", "茶餐厅"] },
+      "台北": { landmark: "龙山寺与老街", folk: "夜市灯火", palette: ["#f7c948", "#b8322f", "#2d6a4f"], icon: "lantern", desc: "龙山寺屋脊、老街骑楼和夜市灯火，营造亲切温暖的台湾民俗氛围。", chips: ["龙山寺", "夜市", "老街"] },
+      "东京": { landmark: "浅草寺与仲见世", folk: "和服灯笼街", palette: ["#f6bf26", "#d94f45", "#2e6f73"], icon: "torii", desc: "融合浅草寺、鸟居、纸灯笼、和服出行与仲见世街景，帮助出发前快速感受东京民俗风情。", chips: ["浅草寺", "和服", "灯笼街"] },
+      "大阪": { landmark: "大阪城与道顿堀", folk: "祭典太鼓", palette: ["#ffc928", "#2f6fbd", "#d13f32"], icon: "castle", desc: "大阪城、道顿堀招牌、祭典太鼓和街头小吃摊，表现关西的热闹气息。", chips: ["大阪城", "道顿堀", "太鼓祭"] },
+      "首尔": { landmark: "景福宫与北村韩屋", folk: "韩服巡游", palette: ["#f2c94c", "#315f88", "#c3423f"], icon: "hanok", desc: "景福宫屋檐、北村韩屋和韩服人群形成传统与都市并置的旅行画面。", chips: ["景福宫", "韩屋", "韩服"] },
+      "新加坡": { landmark: "滨海湾与牛车水", folk: "娘惹色彩", palette: ["#ffd34d", "#1c8c8c", "#d84a3a"], icon: "bay", desc: "滨海湾、牛车水骑楼、娘惹花砖和热带植物，呈现多元文化风情。", chips: ["滨海湾", "牛车水", "娘惹"] },
+      "曼谷": { landmark: "大皇宫与水上市场", folk: "泰式舞蹈", palette: ["#f5c542", "#8c3f97", "#0f8b6f"], icon: "palace", desc: "金色大皇宫、湄南河水上市场和泰式舞蹈服饰，形成浓郁民俗画面。", chips: ["大皇宫", "水上市场", "泰舞"] },
+      "吉隆坡": { landmark: "独立广场与双子塔", folk: "马来织纹", palette: ["#f8cf4c", "#2364aa", "#0b7a5b"], icon: "tower", desc: "双子塔远景、独立广场拱廊、马来织纹和市集小吃，呈现南洋风情。", chips: ["双子塔", "独立广场", "织纹"] },
+      "马尼拉": { landmark: "王城区", folk: "嘉年华游行", palette: ["#ffd54f", "#2b6cb0", "#d64545"], icon: "fort", desc: "王城区石墙、吉普尼色彩和节庆游行，让城市景点带着菲律宾民俗温度。", chips: ["王城区", "吉普尼", "游行"] },
+      "胡志明": { landmark: "中央邮局与滨城市场", folk: "奥黛街景", palette: ["#f3c13a", "#b72b2b", "#247a78"], icon: "market", desc: "中央邮局、滨城市场、奥黛身影和热带街树组成越南风情景点照。", chips: ["中央邮局", "滨城市场", "奥黛"] },
+      "迪拜": { landmark: "老城风塔与金色天际线", folk: "阿拉伯市集", palette: ["#f1b82d", "#7b4e2a", "#16817a"], icon: "desert", desc: "沙漠金光、老城风塔、阿拉伯市集织物与现代天际线形成对比。", chips: ["老城风塔", "市集", "沙漠"] },
+      "多哈": { landmark: "伊斯兰艺术博物馆与瓦其夫市集", folk: "海湾织毯", palette: ["#edbd3d", "#7a1f3d", "#126a70"], icon: "dome", desc: "海湾拱廊、瓦其夫市集、织毯纹样和海岸夕光，呈现卡塔尔民俗质感。", chips: ["瓦其夫市集", "织毯", "海岸"] },
+      "伊斯坦布尔": { landmark: "蓝色清真寺与大巴扎", folk: "旋转舞与彩灯", palette: ["#f2bd2f", "#1f6f8b", "#b83236"], icon: "mosque", desc: "清真寺穹顶、大巴扎彩灯、旋转舞和海峡轮廓，展示欧亚交汇的民俗风情。", chips: ["蓝色清真寺", "大巴扎", "旋转舞"] },
+      "伦敦": { landmark: "塔桥与市集街区", folk: "英伦街头集市", palette: ["#f5c84c", "#2e5e7e", "#b02e36"], icon: "bridge", desc: "塔桥、红色双层巴士、市集街区与复古招牌，呈现英伦城市风情。", chips: ["塔桥", "市集", "复古招牌"] },
+      "巴黎": { landmark: "埃菲尔铁塔与蒙马特", folk: "街头艺人与咖啡馆", palette: ["#f4c64d", "#3d6f7d", "#c44b5a"], icon: "tower", desc: "埃菲尔铁塔远景、蒙马特街角、咖啡馆和街头艺人组成浪漫民俗气息。", chips: ["埃菲尔铁塔", "蒙马特", "咖啡馆"] },
+      "阿姆斯特丹": { landmark: "运河与山墙屋", folk: "花市与自行车", palette: ["#f2c94c", "#1b7a78", "#d95f32"], icon: "canal", desc: "运河桥、山墙屋、花市和自行车日常，呈现荷兰城市生活风情。", chips: ["运河", "花市", "自行车"] },
+      "法兰克福": { landmark: "罗马广场", folk: "木筋屋集市", palette: ["#edc14b", "#8f4a2f", "#2f6f64"], icon: "market", desc: "罗马广场、木筋屋、集市摊位和传统纹样，表现德式城市民俗。", chips: ["罗马广场", "木筋屋", "集市"] },
+      "纽约": { landmark: "布鲁克林桥与街区壁画", folk: "多元街区节", palette: ["#f3c542", "#2d5f88", "#c84630"], icon: "bridge", desc: "布鲁克林桥、街区壁画、爵士街头和多元节庆，呈现纽约城市风情。", chips: ["布鲁克林桥", "壁画", "街区节"] },
+      "洛杉矶": { landmark: "好莱坞与海岸公路", folk: "拉丁街市", palette: ["#ffd166", "#ef476f", "#118ab2"], icon: "coast", desc: "好莱坞山、海岸公路、拉丁街市和棕榈树，组成阳光城市风情图。", chips: ["好莱坞", "海岸", "拉丁街市"] },
+      "旧金山": { landmark: "金门大桥与唐人街", folk: "街坡市集", palette: ["#f4c542", "#d95d39", "#2d7f7b"], icon: "bridge", desc: "金门大桥、唐人街灯笼、坡道电车和湾区雾光，呈现城市民俗融合。", chips: ["金门大桥", "唐人街", "电车"] },
+      "温哥华": { landmark: "海港与煤气镇", folk: "海岸原住民纹样", palette: ["#f0c64a", "#206f6a", "#2e5a7e"], icon: "harbor", desc: "海港山景、煤气镇街灯和海岸原住民纹样，呈现自然与文化结合。", chips: ["海港", "煤气镇", "纹样"] },
+      "悉尼": { landmark: "歌剧院与岩石区", folk: "海港市集", palette: ["#f5ca4a", "#1d6f8f", "#d95d39"], icon: "opera-house", desc: "歌剧院、海港大桥、岩石区市集和海风色彩，呈现澳洲海港风情。", chips: ["歌剧院", "岩石区", "海港市集"] },
+      "墨尔本": { landmark: "弗林德斯街车站与巷弄", folk: "街头艺术市集", palette: ["#f1c84b", "#3f6f8a", "#c24d42"], icon: "street", desc: "弗林德斯街车站、彩绘巷弄、咖啡市集和街头艺术，表现墨尔本文化感。", chips: ["车站", "巷弄", "咖啡市集"] }
+    };
 
     const state = {
       from: "上海",
@@ -1232,193 +1402,143 @@
       cabin: "经济舱",
       maxPrice: 650,
       interval: 30,
-      query: "",
-      filters: new Set(),
+      timer: null,
       rows: [],
-      artSeed: 0,
-      timer: null
+      query: "",
+      filters: new Set(["direct"]),
+      artSeed: 1
     };
 
-    function pad(n) { return String(n).padStart(2, "0"); }
-    function randomBetween(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
-
-    const airlines = [
-      { code:"CA", name:"中国国航", region:"内地", lowCost:false, logo:"" },
-      { code:"MU", name:"东方航空", region:"内地", lowCost:false, logo:"" },
-      { code:"CZ", name:"南方航空", region:"内地", lowCost:false, logo:"" },
-      { code:"HU", name:"海南航空", region:"内地", lowCost:false, logo:"" },
-      { code:"3U", name:"四川航空", region:"内地", lowCost:false, logo:"" },
-      { code:"ZH", name:"深圳航空", region:"内地", lowCost:false, logo:"" },
-      { code:"MF", name:"厦门航空", region:"内地", lowCost:false, logo:"" },
-      { code:"FM", name:"上海航空", region:"内地", lowCost:false, logo:"" },
-      { code:"SC", name:"山东航空", region:"内地", lowCost:false, logo:"" },
-      { code:"GS", name:"天津航空", region:"内地", lowCost:true, logo:"" },
-      { code:"9C", name:"春秋航空", region:"内地", lowCost:true, logo:"" },
-      { code:"GJ", name:"长龙航空", region:"内地", lowCost:true, logo:"" },
-      { code:"DZ", name:"东海航空", region:"内地", lowCost:true, logo:"" },
-      { code:"AQ", name:"九元航空", region:"内地", lowCost:true, logo:"" },
-      { code:"8L", name:"祥鹏航空", region:"内地", lowCost:true, logo:"" },
-      { code:"PN", name:"西部航空", region:"内地", lowCost:true, logo:"" },
-      { code:"CX", name:"国泰航空", region:"港澳", lowCost:false, logo:"" },
-      { code:"KA", name:"港龙航空", region:"港澳", lowCost:false, logo:"" },
-      { code:"JL", name:"日本航空", region:"国际", lowCost:false, logo:"" },
-      { code:"NH", name:"全日空", region:"国际", lowCost:false, logo:"" },
-      { code:"KE", name:"大韩航空", region:"国际", lowCost:false, logo:"" },
-      { code:"OZ", name:"韩亚航空", region:"国际", lowCost:false, logo:"" },
-      { code:"SQ", name:"新加坡航空", region:"国际", lowCost:false, logo:"" },
-      { code:"TG", name:"泰国航空", region:"国际", lowCost:false, logo:"" },
-      { code:"EK", name:"阿联酋航空", region:"国际", lowCost:false, logo:"" },
-      { code:"QR", name:"卡塔尔航空", region:"国际", lowCost:false, logo:"" },
-      { code:"TK", name:"土耳其航空", region:"国际", lowCost:false, logo:"" },
-      { code:"AF", name:"法国航空", region:"国际", lowCost:false, logo:"" },
-      { code:"LH", name:"汉莎航空", region:"国际", lowCost:false, logo:"" },
-      { code:"BA", name:"英国航空", region:"国际", lowCost:false, logo:"" },
-      { code:"DL", name:"达美航空", region:"国际", lowCost:false, logo:"" },
-      { code:"UA", name:"美联航", region:"国际", lowCost:false, logo:"" }
-    ];
-
-    const airportCodes = city => {
-      const map = {
-        "上海":"PVG SHA","北京":"PEK PKX","广州":"CAN","深圳":"SZX",
-        "成都":"TFU CTU","杭州":"HGH","重庆":"CKG","南京":"NKG",
-        "西安":"XIY","昆明":"KMG","武汉":"WUH","厦门":"XMN",
-        "长沙":"CSX","青岛":"TAO","大连":"DLC","三亚":"SYX",
-        "东京":"NRT HND","大阪":"KIX ITM","首尔":"ICN GMP",
-        "曼谷":"BKK DMK","新加坡":"SIN","香港":"HKG",
-        "台北":"TPE TSA","澳门":"MFM","纽约":"JFK EWR LGA",
-        "洛杉矶":"LAX","旧金山":"SFO","伦敦":"LHR LGW STN",
-        "巴黎":"CDG ORY","悉尼":"SYD","墨尔本":"MEL",
-        "普吉岛":"HKT","巴厘岛":"DPS","清迈":"CNX"
-      };
-      return (map[city] || city).split(" ");
+    const el = {
+      fromCity: document.getElementById("fromCity"),
+      toCity: document.getElementById("toCity"),
+      departDate: document.getElementById("departDate"),
+      tripType: document.getElementById("tripType"),
+      maxPrice: document.getElementById("maxPrice"),
+      interval: document.getElementById("interval"),
+      routeTitle: document.getElementById("routeTitle"),
+      routeSub: document.getElementById("routeSub"),
+      syncStatus: document.getElementById("syncStatus"),
+      lastUpdated: document.getElementById("lastUpdated"),
+      airlineCount: document.getElementById("airlineCount"),
+      minPrice: document.getElementById("minPrice"),
+      avgPrice: document.getElementById("avgPrice"),
+      minCarrier: document.getElementById("minCarrier"),
+      alertCount: document.getElementById("alertCount"),
+      flightCount: document.getElementById("flightCount"),
+      chart: document.getElementById("chart"),
+      destinationPhoto: document.getElementById("destinationPhoto"),
+      destinationBadge: document.getElementById("destinationBadge"),
+      destinationTitle: document.getElementById("destinationTitle"),
+      destinationDesc: document.getElementById("destinationDesc"),
+      destinationChips: document.getElementById("destinationChips"),
+      destinationPrompt: document.getElementById("destinationPrompt"),
+      aiStatus: document.getElementById("aiStatus"),
+      aiDrawBtn: document.getElementById("aiDrawBtn"),
+      airlineList: document.getElementById("airlineList"),
+      flightRows: document.getElementById("flightRows"),
+      tableSearch: document.getElementById("tableSearch"),
+      resultText: document.getElementById("resultText"),
+      toast: document.getElementById("toast"),
+      apiModal: document.getElementById("apiModal")
     };
 
-    const airportInfo = city => {
-      const info = {
-        "东京":{ country:"JP", timezone:"Asia/Tokyo" },
-        "大阪":{ country:"JP", timezone:"Asia/Tokyo" },
-        "首尔":{ country:"KR", timezone:"Asia/Seoul" },
-        "曼谷":{ country:"TH", timezone:"Asia/Bangkok" },
-        "新加坡":{ country:"SG", timezone:"Asia/Singapore" },
-        "香港":{ country:"HK", timezone:"Asia/Hong_Kong" },
-        "台北":{ country:"TW", timezone:"Asia/Taipei" },
-        "澳门":{ country:"MO", timezone:"Asia/Macau" },
-        "普吉岛":{ country:"TH", timezone:"Asia/Bangkok" },
-        "巴厘岛":{ country:"ID", timezone:"Asia/Makassar" },
-        "清迈":{ country:"TH", timezone:"Asia/Bangkok" },
-        "纽约":{ country:"US", timezone:"America/New_York" },
-        "洛杉矶":{ country:"US", timezone:"America/Los_Angeles" },
-        "旧金山":{ country:"US", timezone:"America/Los_Angeles" },
-        "伦敦":{ country:"GB", timezone:"Europe/London" },
-        "巴黎":{ country:"FR", timezone:"Europe/Paris" },
-        "悉尼":{ country:"AU", timezone:"Australia/Sydney" },
-        "墨尔本":{ country:"AU", timezone:"Australia/Melbourne" }
-      };
-      const countryMap = {
-        "JP":"日本","KR":"韩国","TH":"泰国","SG":"新加坡","HK":"香港",
-        "TW":"台湾","MO":"澳门","ID":"印尼","US":"美国","GB":"英国",
-        "FR":"法国","AU":"澳大利亚"
-      };
-      const item = info[city] || { country:"CN", timezone:"Asia/Shanghai" };
-      return { ...item, countryLabel: countryMap[item.country] || "中国" };
-    };
-
-    function isInternationalRoute() {
-      const fromInfo = airportInfo(state.from);
-      const toInfo = airportInfo(state.to);
-      return fromInfo.country !== toInfo.country;
+    function pad(num) {
+      return String(num).padStart(2, "0");
     }
 
     function todayPlus(days) {
-      const d = new Date();
-      d.setDate(d.getDate() + days);
-      return d.toISOString().slice(0, 10);
+      const date = new Date();
+      date.setDate(date.getDate() + days);
+      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+    }
+
+    function randomBetween(min, max) {
+      return Math.floor(min + Math.random() * (max - min + 1));
     }
 
     function makeFlightNumber(code) {
-      const num = randomBetween(1000, 9999);
-      return `${code}${num}`;
+      return `${code}${randomBetween(1000, 9899)}`;
+    }
+
+    function airportInfo(city) {
+      return airports[city] || { codes: ["T1", "T2"], country: "OTHER" };
+    }
+
+    function airportCodes(city) {
+      return airportInfo(city).codes;
+    }
+
+    function isInternationalRoute() {
+      return airportInfo(state.from).country !== airportInfo(state.to).country;
     }
 
     function routeTitle() {
-      const from = state.from;
-      const to = state.to;
-      const countries = ["JP","KR","TH","SG","HK","TW","MO","ID","US","GB","FR","AU","MY","PH","VN"];
-      const fromInfo = airportInfo(from);
-      const toInfo = airportInfo(to);
-      const flag = fromInfo.country !== toInfo.country ? " ✈ 国际航线" : "";
-      return `🩷 ${from} → ${to}${flag}`;
+      return `${state.from} ${airportCodes(state.from).join("/")} → ${state.to} ${airportCodes(state.to).join("/")}`;
     }
 
-    function escapeXml(str) {
-      return str.replace(/[&<>"']/g, match => ({
-        "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
-      })[match]);
+    function airlineLogo(item) {
+      return `
+        <div class="airline-logo" style="background:${item.color}" title="${item.name}">
+          <img src="${item.logo}" alt="${item.name}图标" loading="lazy" onerror="this.remove(); this.parentElement.textContent='${item.code}';" />
+        </div>
+      `;
     }
 
-    function airlineLogo(airline) {
-      if (airline.logo) {
-        return `<div class="airline-logo"><img src="${escapeXml(airline.logo)}" alt="${escapeXml(airline.code)}" loading="lazy"/></div>`;
-      }
-      return `<div class="airline-logo">${escapeXml(airline.code.slice(0, 2))}</div>`;
+    function escapeXml(value) {
+      return String(value).replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        "\"": "&quot;",
+        "'": "&apos;"
+      }[char]));
     }
 
     function destinationProfile(city) {
-      const profiles = {
-        "东京":{ landmark:"浅草寺 ∙ 雷门", folk:"和服文化", desc:"传统与现代完美融合的都市，樱花、浅草、秋叶原交织出独特的东瀛风情。", chips:["🌸 赏樱圣地","⛩ 浅草寺","🗼 天空树"], palette:["#FFB3C6","#E8608C","#C48BB5"], icon:"tokyo" },
-        "大阪":{ landmark:"道顿堀 ∙ 大阪城", folk:"美食之都", desc:"关西的美食天堂，章鱼烧、大阪烧与环球影城带来无限欢乐。", chips:["🍜 道顿堀","🏯 大阪城","🎢 USJ"], palette:["#FFD6E4","#F2A66A","#C48BB5"], icon:"osaka" },
-        "首尔":{ landmark:"景福宫 ∙ 明洞", folk:"韩流文化", desc:"K-POP 与传统文化在此交汇，购物、美食、韩剧取景地一网打尽。", chips:["🏰 景福宫","🛍 明洞","🎤 K-POP"], palette:["#F0D6FF","#C48BB5","#8C6B7A"], icon:"seoul" },
-        "曼谷":{ landmark:"大皇宫 ∙ 水上市场", folk:"佛国之都", desc:"金碧辉煌的寺庙与热闹的水上市场，泰式微笑温暖每一位旅人。", chips:["🙏 大皇宫","🛶 水上市场","🍛 泰式美食"], palette:["#FFD6E4","#F2A66A","#7BC8A4"], icon:"bangkok" },
-        "新加坡":{ landmark:"滨海湾 ∙ 圣淘沙", folk:"花园城市", desc:"多元文化熔炉，鱼尾狮、滨海湾花园与美食中心应有尽有。", chips:["🌳 滨海湾","🎡 摩天轮","🍜 海南鸡饭"], palette:["#FFD6E4","#7BC8A4","#C48BB5"], icon:"singapore" },
-        "香港":{ landmark:"维多利亚港 ∙ 太平山", folk:"东方之珠", desc:"繁华的购物天堂与美食之都，维港夜景令人陶醉。", chips:["🌃 维港","🏔 太平山","🥟 点心"], palette:["#FFD6E4","#E8608C","#FFD700"], icon:"hongkong" },
-        "巴黎":{ landmark:"埃菲尔铁塔 ∙ 卢浮宫", folk:"浪漫之都", desc:"艺术与浪漫的代名词，咖啡馆、博物馆与时尚之都的魅力。", chips:["🗼 铁塔","🎨 卢浮宫","🥐 法式面包"], palette:["#F0D6FF","#C48BB5","#FFD700"], icon:"paris" },
-        "纽约":{ landmark:"自由女神 ∙ 时代广场", folk:"不夜城", desc:"世界十字路口，百老汇、中央公园与摩天大楼的都市交响曲。", chips:["🗽 自由女神","🎭 百老汇","🌳 中央公园"], palette:["#FFD6E4","#8C6B7A","#C48BB5"], icon:"newyork" },
-        "伦敦":{ landmark:"大本钟 ∙ 伦敦塔桥", folk:"英伦风情", desc:"古老城堡与现代都市的完美结合，英伦下午茶与皇家气派。", chips:["🕰 大本钟","🌉 塔桥","☕ 下午茶"], palette:["#F0D6FF","#8C6B7A","#C48BB5"], icon:"london" },
-        "悉尼":{ landmark:"歌剧院 ∙ 海港大桥", folk:"阳光海岸", desc:"阳光、沙滩与歌剧院，南半球的活力之都。", chips:["🎭 歌剧院","🌉 海港大桥","🏖 邦迪海滩"], palette:["#FFD6E4","#7BC8A4","#FFD700"], icon:"sydney" },
-        "普吉岛":{ landmark:"芭东海滩 ∙ 大佛", folk:"热带天堂", desc:"碧海蓝天的热带岛屿，潜水、日落与海鲜大餐的度假胜地。", chips:["🏖 芭东海滩","🤿 潜水","🦐 海鲜"], palette:["#FFD6E4","#7BC8A4","#F2A66A"], icon:"phuket" },
-        "巴厘岛":{ landmark:"海神庙 ∙ 乌布", folk:"千寺之岛", desc:"神秘的热带天堂，梯田、寺庙与印度洋日落令人神往。", chips:["🛕 海神庙","🌾 梯田","🌅 日落"], palette:["#FFD6E4","#7BC8A4","#C48BB5"], icon:"bali" },
-        "清迈":{ landmark:"素贴山 ∙ 古城", folk:"泰北玫瑰", desc:"泰北的文艺古城，寺庙、夜市与大象营的慢生活。", chips:["⛰ 素贴山","🛕 古城","🐘 大象营"], palette:["#FFD6E4","#F2A66A","#7BC8A4"], icon:"chiangmai" },
-        "澳门":{ landmark:"大三巴 ∙ 威尼斯人", folk:"东西交融", desc:"葡式风情与中式传统的独特碰撞，蛋挞与赌城的奇妙组合。", chips:["🏛 大三巴","🎰 威尼斯人","🥚 葡挞"], palette:["#FFD6E4","#FFD700","#C48BB5"], icon:"macau" },
-        "三亚":{ landmark:"天涯海角 ∙ 蜈支洲岛", folk:"热带海滨", desc:"中国的热带天堂，碧海蓝天与椰林沙滩的度假胜地。", chips:["🏖 亚龙湾","🌴 椰梦长廊","🤿 潜水"], palette:["#FFD6E4","#7BC8A4","#F2A66A"], icon:"sanya" },
-        "成都":{ landmark:"大熊猫基地 ∙ 宽窄巷子", folk:"天府之国", desc:"美食之都，火锅、串串与大熊猫的乐园。", chips:["🐼 大熊猫","🍲 火锅","🏘 宽窄巷子"], palette:["#FFD6E4","#F2A66A","#C48BB5"], icon:"chengdu" },
-        "重庆":{ landmark:"洪崖洞 ∙ 长江索道", folk:"8D魔幻", desc:"魔幻的山城夜景，火锅飘香，轻轨穿楼过。", chips:["🌃 洪崖洞","🚠 索道","🍜 小面"], palette:["#FFD6E4","#E8608C","#C48BB5"], icon:"chongqing" },
-        "杭州":{ landmark:"西湖 ∙ 灵隐寺", folk:"人间天堂", desc:"西湖美景、龙井茶香，江南水乡的诗意生活。", chips:["🏞 西湖","🍵 龙井","🛶 西溪"], palette:["#FFD6E4","#7BC8A4","#C48BB5"], icon:"hangzhou" },
-        "厦门":{ landmark:"鼓浪屿 ∙ 环岛路", folk:"海上花园", desc:"文艺小清新的海滨城市，钢琴声与海风相伴。", chips:["🎹 鼓浪屿","🌊 环岛路","📸 曾厝垵"], palette:["#FFD6E4","#7BC8A4","#FFD700"], icon:"xiamen" },
-        "昆明":{ landmark:"石林 ∙ 滇池", folk:"春城花都", desc:"四季如春的花城，石林奇观与滇池风光令人流连。", chips:["🌸 花市","⛰ 石林","🌅 滇池"], palette:["#FFD6E4","#C48BB5","#7BC8A4"], icon:"kunming" }
-      };
-      return profiles[city] || {
-        landmark:"城市地标", folk:"当地风情",
-        desc:"探索未知的城市，发现独特的文化与风景。",
-        chips:["📸 地标打卡","🎭 当地文化","🍜 特色美食"],
-        palette:["#FFB3C6","#E8608C","#C48BB5"],
-        icon:"generic"
+      return destinationScenes[city] || {
+        landmark: `${city}代表性景点`,
+        folk: "当地民俗街景",
+        palette: ["#f5b700", "#13847f", "#d95d39"],
+        icon: "generic",
+        desc: `以${city}的代表性景点、传统服饰、街头市集和节庆灯火为核心，生成一张有民俗风情的旅行景点照。`,
+        chips: ["代表景点", "民俗市集", "节庆灯火"]
       };
     }
 
-    function sceneMotif(icon, palette, city) {
-      const [gold, red, teal] = palette;
+    function destinationPrompt(city, profile) {
+      return `AI 绘图提示词：生成 ${city} ${profile.landmark} 旅行景点照，画面必须体现${profile.folk}、当地传统服饰、街头市集和民俗纹样；明亮黄色旅行品牌氛围，真实照片质感，无水印，无多余文字。`;
+    }
+
+    function sceneMotif(icon, p, city) {
+      const [gold, red, teal] = p;
+      const safeCity = escapeXml(city);
       const motifs = {
-        tokyo: `<path d="M460 180 l20-40 20 40z" fill="#E8608C"/><rect x="448" y="180" width="64" height="14" fill="#FFB3C6"/><rect x="462" y="148" width="36" height="32" fill="#fff" stroke="#E8608C" stroke-width="3"/><circle cx="480" cy="166" r="5" fill="#FFD700"/><path d="M380 280q50-60 140-20 60 26 100-10" fill="none" stroke="#C48BB5" stroke-width="8" stroke-linecap="round"/>`,
-        osaka: `<rect x="420" y="160" width="120" height="80" rx="8" fill="#FFD6E4" stroke="#E8608C" stroke-width="4"/><rect x="440" y="200" width="80" height="40" fill="#fff"/><circle cx="460" cy="220" r="8" fill="#F2A66A"/><text x="470" y="226" font-family="sans-serif" font-size="16" fill="#3D2C3D">大阪</text><path d="M430 240 h100" stroke="#E8608C" stroke-width="3"/>`,
-        seoul: `<rect x="430" y="150" width="100" height="80" rx="6" fill="#F0D6FF"/><rect x="455" y="150" width="16" height="80" fill="#C48BB5"/><rect x="490" y="160" width="12" height="70" fill="#C48BB5"/><path d="M410 210 q70 40 140 0" fill="none" stroke="#8C6B7A" stroke-width="6"/>`,
-        bangkok: `<path d="M420 240 l80-60 80 60z" fill="#FFD700" opacity=".6"/><rect x="440" y="180" width="40" height="60" fill="#FFD6E4"/><rect x="480" y="180" width="40" height="60" fill="#FFD6E4"/><circle cx="510" cy="160" r="18" fill="#FFD700" opacity=".5"/>`,
-        singapore: `<rect x="430" y="160" width="100" height="70" rx="12" fill="#FFD6E4"/><circle cx="480" cy="190" r="14" fill="#7BC8A4" opacity=".4"/><path d="M440 230 q60-20 80 10" fill="none" stroke="#C48BB5" stroke-width="5"/>`,
-        hongkong: `<rect x="420" y="150" width="50" height="100" fill="#C48BB5" opacity=".5"/><rect x="490" y="170" width="50" height="80" fill="#FFB3C6" opacity=".5"/><circle cx="480" cy="120" r="20" fill="#FFD700" opacity=".6"/>`,
-        paris: `<path d="M440 210 q60-80 120-40" fill="none" stroke="#C48BB5" stroke-width="8"/><rect x="430" y="210" width="100" height="20" rx="4" fill="#FFD6E4"/><rect x="480" y="160" width="10" height="50" fill="#8C6B7A"/>`,
-        newyork: `<rect x="430" y="140" width="30" height="110" fill="#C48BB5"/><rect x="475" y="160" width="30" height="90" fill="#8C6B7A"/><rect x="520" y="170" width="30" height="80" fill="#C48BB5"/><polygon points="445,140 460,120 475,140" fill="#FFD700"/>`,
-        london: `<rect x="430" y="160" width="100" height="80" fill="#F0D6FF"/><rect x="440" y="170" width="20" height="70" fill="#C48BB5"/><rect x="465" y="170" width="16" height="70" fill="#C48BB5"/><rect x="490" y="180" width="18" height="60" fill="#C48BB5"/><rect x="515" y="175" width="12" height="65" fill="#C48BB5"/><ellipse cx="480" cy="160" rx="30" ry="10" fill="#FFD700" opacity=".4"/>`,
-        sydney: `<path d="M420 220 Q480 140 540 220" fill="none" stroke="#FFB3C6" stroke-width="10"/><path d="M420 220 Q480 170 540 220" fill="none" stroke="#C48BB5" stroke-width="10"/><rect x="470" y="160" width="20" height="60" fill="#8C6B7A"/>`,
-        phuket: `<circle cx="480" cy="180" r="40" fill="#7BC8A4" opacity=".3"/><path d="M440 210 q40-30 80 0" fill="none" stroke="#F2A66A" stroke-width="8"/><circle cx="470" cy="170" r="8" fill="#FFD700" opacity=".6"/>`,
-        bali: `<path d="M400 230 L480 140 L560 230Z" fill="#7BC8A4" opacity=".2"/><rect x="460" y="180" width="40" height="50" fill="#FFD6E4"/><path d="M420 200 q60-20 120 0" fill="none" stroke="#C48BB5" stroke-width="4"/>`,
-        chiangmai: `<path d="M430 220 l50-80 50 80z" fill="#7BC8A4" opacity=".3"/><rect x="455" y="140" width="40" height="40" fill="#FFD6E4"/><rect x="465" y="180" width="20" height="40" fill="#C48BB5"/>`,
-        macau: `<rect x="440" y="160" width="80" height="70" rx="6" fill="#FFD6E4"/><rect x="450" y="170" width="60" height="14" fill="#C48BB5"/><rect x="450" y="192" width="16" height="12" fill="#FFD700"/><circle cx="480" cy="198" r="6" fill="#C48BB5"/>`,
-        sanya: `<path d="M410 220 q35-80 140-20" fill="none" stroke="#7BC8A4" stroke-width="10"/><circle cx="460" cy="170" r="14" fill="#FFD700" opacity=".4"/><path d="M480 200 l10-30 10 30" fill="#F2A66A"/>`,
-        chengdu: `<circle cx="480" cy="190" r="30" fill="#555"/><circle cx="470" cy="185" r="8" fill="#fff"/><circle cx="490" cy="185" r="8" fill="#fff"/><circle cx="466" cy="183" r="3" fill="#222"/><circle cx="486" cy="183" r="3" fill="#222"/><ellipse cx="480" cy="200" rx="12" ry="6" fill="#888"/>`,
-        chongqing: `<rect x="430" y="150" width="100" height="80" fill="#C48BB5" opacity=".3"/><rect x="440" y="160" width="20" height="70" fill="#E8608C" opacity=".4"/><rect x="470" y="170" width="20" height="60" fill="#E8608C" opacity=".4"/><rect x="500" y="180" width="20" height="50" fill="#E8608C" opacity=".4"/><circle cx="480" cy="130" r="18" fill="#FFD700" opacity=".4"/>`,
-        hangzhou: `<path d="M400 230 q80-40 160 0" fill="none" stroke="#7BC8A4" stroke-width="8"/><path d="M410 220 q10-60 70-30" fill="none" stroke="#C48BB5" stroke-width="4"/><circle cx="490" cy="200" r="12" fill="#FFD700" opacity=".3"/>`,
-        xiamen: `<path d="M410 230 q70-50 140 0" fill="none" stroke="#7BC8A4" stroke-width="8"/><circle cx="480" cy="180" r="16" fill="#FFD6E4"/><circle cx="480" cy="180" r="8" fill="#7BC8A4" opacity=".4"/>`,
-        kunming: `<circle cx="480" cy="180" r="30" fill="#7BC8A4" opacity=".2"/><circle cx="460" cy="170" r="6" fill="#FFB3C6"/><circle cx="480" cy="160" r="6" fill="#FFB3C6"/><circle cx="500" cy="170" r="6" fill="#FFB3C6"/><circle cx="470" cy="185" r="6" fill="#FFB3C6"/><circle cx="490" cy="185" r="6" fill="#FFB3C6"/>`,
-        generic: `<rect x="430" y="170" width="100" height="80" rx="8" fill="#FFD6E4"/><rect x="440" y="180" width="80" height="60" rx="4" fill="#fff"/><text x="460" y="214" font-family="sans-serif" font-size="14" fill="#8C6B7A">${escapeXml(city)}</text>`
+        torii: `<path d="M438 98h224v24H438zM470 122h28v160h-28zM602 122h28v160h-28zM424 154h252v20H424z" fill="${red}"/><path d="M500 198h100v84H500z" fill="${gold}" opacity=".8"/>`,
+        temple: `<path d="M430 144h250l-30 34H460zM462 178h186v96H462zM500 120h110l36 24H464z" fill="${red}"/><path d="M496 188h116v86H496z" fill="#fff1bc"/>`,
+        lion: `<circle cx="548" cy="174" r="64" fill="${red}"/><circle cx="524" cy="164" r="12" fill="#fff"/><circle cx="574" cy="164" r="12" fill="#fff"/><path d="M502 202c28 28 70 28 96 0" stroke="${gold}" stroke-width="16" stroke-linecap="round"/>`,
+        coast: `<path d="M390 240c70-54 152-58 238-16 54 26 92 18 132-10v110H390z" fill="${teal}" opacity=".78"/><path d="M470 122h36v118h-36zM530 82h42v158h-42zM596 140h34v100h-34z" fill="#fff8db"/>`,
+        opera: `<path d="M465 226c36-88 86-118 150-42-30-6-54 4-76 34-20-14-44-12-74 8Z" fill="${red}"/><path d="M500 152c32 28 72 28 104 0v72H500z" fill="#fff1bc"/>`,
+        lake: `<path d="M400 242c74-18 126-18 190 0s114 16 170-8v80H400z" fill="${teal}" opacity=".7"/><path d="M500 160h110v22H500zM518 182h74v58h-74z" fill="${red}"/>`,
+        stilt: `<path d="M430 138h220l44 58H474zM474 196h176v78H474z" fill="${red}"/><path d="M502 274v48M620 274v48M454 274v48" stroke="#6b4200" stroke-width="10"/>`,
+        wall: `<path d="M410 216h282v82H410zM430 176h66v40h-66zM536 160h66v56h-66zM640 184h38v32h-38z" fill="${red}"/><path d="M398 216h306" stroke="${gold}" stroke-width="14"/>`,
+        harbor: `<path d="M420 238c76 18 144 18 220 0 42-10 82-8 124 8v72H420z" fill="${teal}" opacity=".74"/><path d="M514 130h44v108h-44zM586 92h34v146h-34z" fill="#fff8db"/>`,
+        lantern: `<path d="M456 140h180v38H456zM486 178h120v78H486z" fill="${red}"/><circle cx="666" cy="178" r="28" fill="${gold}"/><path d="M666 150v-24M666 206v24" stroke="#7a4d00" stroke-width="6"/>`,
+        castle: `<path d="M452 236h186v52H452zM488 176h114v60H488zM510 130h70v46H510z" fill="#fff1bc"/><path d="M430 236h230M474 176h142M498 130h94" stroke="${red}" stroke-width="18" stroke-linecap="round"/>`,
+        hanok: `<path d="M418 172c82-52 174-52 256 0-58-6-122-4-192 0Z" fill="${red}"/><path d="M462 172h168v90H462z" fill="#fff1bc"/><path d="M492 198h108" stroke="${teal}" stroke-width="10"/>`,
+        bay: `<path d="M490 86c34 42 44 94 34 154h-54c-10-60-2-112 20-154Z" fill="#fff8db"/><path d="M572 142h60v98h-60zM416 184h42v56h-42z" fill="${teal}" opacity=".8"/>`,
+        palace: `<path d="M506 70l58 92h-116z" fill="#ffe16a" stroke="${red}" stroke-width="12" stroke-linejoin="round"/><path d="M424 162h258v34H424zM462 196h182v84H462z" fill="${gold}"/><path d="M496 124h20v156h-20M552 124h20v156h-20M608 176h20v104h-20" stroke="#7a4d00" stroke-width="10"/><path d="M660 286c-58 30-146 30-220 0 40 54 172 54 220 0Z" fill="${teal}" opacity=".78"/><path d="M676 322c-56-22-92-18-118 12" stroke="${red}" stroke-width="12" stroke-linecap="round"/><circle cx="706" cy="296" r="18" fill="#fff1bc"/><path d="M704 316c-24 26-34 58-32 96M704 336l38 30M698 342l-38 22" stroke="${red}" stroke-width="10" stroke-linecap="round"/>`,
+        tower: `<path d="M542 82l58 196h-116zM504 206h76M520 152h44" stroke="${teal}" stroke-width="14" stroke-linecap="round"/><path d="M434 220h70v58h-70zM620 194h58v84h-58z" fill="${red}" opacity=".82"/>`,
+        fort: `<path d="M424 170h228v112H424zM454 136h54v34h-54zM566 136h54v34h-54z" fill="#fff1bc"/><path d="M424 170h228" stroke="${red}" stroke-width="14"/>`,
+        market: `<path d="M410 164h260l-34 44H444z" fill="${red}"/><path d="M444 208h192v74H444z" fill="#fff1bc"/><path d="M470 208v74M532 208v74M594 208v74" stroke="${gold}" stroke-width="10"/>`,
+        desert: `<path d="M400 250c86-44 162-44 250 0 42 20 80 22 122 4v68H400z" fill="#d79a35"/><path d="M492 140h56v104h-56zM572 168h54v76h-54z" fill="#fff1bc"/>`,
+        dome: `<path d="M458 188c22-72 132-72 154 0v88H458z" fill="#fff1bc"/><path d="M502 118h68v64h-68z" fill="${red}"/><path d="M536 92v28" stroke="${gold}" stroke-width="12" stroke-linecap="round"/>`,
+        mosque: `<path d="M444 202c20-78 140-78 160 0v72H444z" fill="#fff1bc"/><path d="M410 132h34v142h-34zM636 132h34v142h-34z" fill="${teal}"/><circle cx="524" cy="142" r="32" fill="${red}"/>`,
+        bridge: `<path d="M410 246h280M456 246c24-78 76-78 100 0M556 246c24-78 76-78 100 0" stroke="${red}" stroke-width="16" stroke-linecap="round"/><path d="M470 132h34v114h-34zM596 132h34v114h-34z" fill="${teal}"/>`,
+        canal: `<path d="M400 244c74 18 132 20 198 2s112-20 174 0v72H400z" fill="${teal}" opacity=".76"/><path d="M430 144h58v96h-58zM502 126h58v114h-58zM574 154h58v86h-58z" fill="#fff1bc"/><path d="M430 144h58M502 126h58M574 154h58" stroke="${red}" stroke-width="10"/>`,
+        "opera-house": `<path d="M430 250c34-104 88-140 144-26-42-16-86-8-144 26Z" fill="#fff8db"/><path d="M520 250c26-82 72-108 118-18-34-12-68-6-118 18Z" fill="#fff1bc"/><path d="M402 258h300" stroke="${teal}" stroke-width="18"/>`,
+        street: `<path d="M432 162h214v68H432zM468 108h142v54H468z" fill="${red}"/><path d="M432 230h214v54H432z" fill="#fff1bc"/><path d="M470 256h140" stroke="${teal}" stroke-width="12"/>`,
+        generic: `<path d="M430 188h226v90H430zM462 140h162v48H462z" fill="#fff1bc"/><path d="M430 188h226M462 140h162" stroke="${red}" stroke-width="16" stroke-linecap="round"/>`
       };
       return motifs[icon] || motifs.generic;
     }
@@ -1430,16 +1550,16 @@
       const chips = profile.chips.slice(0, 3).map(escapeXml);
       while (chips.length < 3) chips.push("当地风情");
       const svg = `
-        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" role="img" aria-label="${escapeXml(city)}民俗风情景点照">
           <defs>
             <linearGradient id="sky" x1="0" x2="1" y1="0" y2="1">
-              <stop offset="0" stop-color="#FFE4EC"/>
+              <stop offset="0" stop-color="#fff4b8"/>
               <stop offset=".52" stop-color="${gold}"/>
-              <stop offset="1" stop-color="#FFF0F5"/>
+              <stop offset="1" stop-color="#fffdf2"/>
             </linearGradient>
             <radialGradient id="sun" cx=".28" cy=".2" r=".36">
-              <stop offset="0" stop-color="#FFF0F5"/>
-              <stop offset="1" stop-color="#FFB3C6" stop-opacity="0"/>
+              <stop offset="0" stop-color="#fffdf1"/>
+              <stop offset="1" stop-color="#ffd34d" stop-opacity="0"/>
             </radialGradient>
             <filter id="grain">
               <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="${state.artSeed + 4}"/>
@@ -1449,32 +1569,32 @@
           </defs>
           <rect width="900" height="560" fill="url(#sky)"/>
           <rect width="900" height="560" fill="url(#sun)"/>
-          <circle cx="${190 + offset}" cy="112" r="64" fill="#FFF0F5" opacity=".76"/>
+          <circle cx="${190 + offset}" cy="112" r="64" fill="#fff7cc" opacity=".76"/>
           <path d="M0 348c90-80 180-88 274-34 94 54 164 42 252-6 120-64 226-50 374 34v218H0z" fill="${teal}" opacity=".18"/>
-          <path d="M0 402c104-62 190-56 274-22 94 38 174 26 258-10 126-54 228-38 368 38v152H0z" fill="#FFF0F5"/>
+          <path d="M0 402c104-62 190-56 274-22 94 38 174 26 258-10 126-54 228-38 368 38v152H0z" fill="#fff8dd"/>
           <g transform="translate(618 44)">
-            <rect width="236" height="134" rx="22" fill="#FFF0F5" opacity=".9"/>
-            <text x="20" y="34" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="18" font-weight="800" fill="#6B2E4A">Loopy 推荐特色</text>
+            <rect width="236" height="134" rx="22" fill="#fffdf1" opacity=".9"/>
+            <text x="20" y="34" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="18" font-weight="800" fill="#4a3000">AI 提炼当地特色</text>
             <circle cx="26" cy="68" r="8" fill="${red}"/>
-            <text x="44" y="74" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="15" font-weight="700" fill="#6B3D55">${escapeXml(profile.landmark)}</text>
+            <text x="44" y="74" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="15" font-weight="700" fill="#5d4b22">${escapeXml(profile.landmark)}</text>
             <circle cx="26" cy="98" r="8" fill="${teal}"/>
-            <text x="44" y="104" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="15" font-weight="700" fill="#6B3D55">${escapeXml(profile.folk)}</text>
+            <text x="44" y="104" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="15" font-weight="700" fill="#5d4b22">${escapeXml(profile.folk)}</text>
           </g>
           ${sceneMotif(profile.icon, palette, city)}
           <g transform="translate(552 426)">
-            <rect x="0" y="0" width="92" height="34" rx="17" fill="#FFF0F5" opacity=".9"/>
-            <rect x="104" y="0" width="110" height="34" rx="17" fill="#FFF0F5" opacity=".9"/>
-            <rect x="226" y="0" width="94" height="34" rx="17" fill="#FFF0F5" opacity=".9"/>
-            <text x="18" y="23" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="800" fill="#6B2E4A">${chips[0]}</text>
-            <text x="122" y="23" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="800" fill="#6B2E4A">${chips[1]}</text>
-            <text x="244" y="23" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="800" fill="#6B2E4A">${chips[2]}</text>
+            <rect x="0" y="0" width="92" height="34" rx="17" fill="#fffdf1" opacity=".9"/>
+            <rect x="104" y="0" width="110" height="34" rx="17" fill="#fffdf1" opacity=".9"/>
+            <rect x="226" y="0" width="94" height="34" rx="17" fill="#fffdf1" opacity=".9"/>
+            <text x="18" y="23" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="800" fill="#4a3000">${chips[0]}</text>
+            <text x="122" y="23" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="800" fill="#4a3000">${chips[1]}</text>
+            <text x="244" y="23" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="800" fill="#4a3000">${chips[2]}</text>
           </g>
           <g transform="translate(${190 + offset} 255)">
-            <path d="M0 72c28-64 86-92 142-56 44 28 38 104-24 126C48 166-22 124 0 72Z" fill="#FFF0F5"/>
+            <path d="M0 72c28-64 86-92 142-56 44 28 38 104-24 126C48 166-22 124 0 72Z" fill="#fff9df"/>
             <path d="M32 58c36-48 88-48 116-4" fill="none" stroke="${red}" stroke-width="14" stroke-linecap="round"/>
-            <circle cx="50" cy="78" r="8" fill="#3D2C3D"/>
-            <circle cx="106" cy="78" r="8" fill="#3D2C3D"/>
-            <path d="M62 108c18 14 42 14 62 0" fill="none" stroke="#3D2C3D" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="50" cy="78" r="8" fill="#3c2800"/>
+            <circle cx="106" cy="78" r="8" fill="#3c2800"/>
+            <path d="M62 108c18 14 42 14 62 0" fill="none" stroke="#3c2800" stroke-width="8" stroke-linecap="round"/>
             <path d="M-28 150c58-36 138-36 198 0v64H-28z" fill="${red}" opacity=".92"/>
             <path d="M16 158c26 18 66 18 96 0" fill="none" stroke="${gold}" stroke-width="10" stroke-linecap="round"/>
           </g>
@@ -1483,12 +1603,12 @@
             <circle cx="146" cy="424" r="14" fill="${gold}"/>
             <circle cx="748" cy="420" r="18" fill="${red}"/>
             <circle cx="794" cy="446" r="13" fill="${gold}"/>
-            <path d="M108 462v34M748 444v34" stroke="#7B3D6B" stroke-width="5" stroke-linecap="round"/>
+            <path d="M108 462v34M748 444v34" stroke="#7a4d00" stroke-width="5" stroke-linecap="round"/>
           </g>
           <path d="M0 500c120-24 232-20 336 0s212 22 330 0c84-16 162-14 234 6v54H0z" fill="${teal}" opacity=".2"/>
-          <rect x="30" y="32" width="230" height="68" rx="18" fill="#FFF0F5" opacity=".88"/>
-          <text x="54" y="61" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="20" font-weight="800" fill="#6B2E4A">Loopy AI 绘图</text>
-          <text x="54" y="86" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="16" fill="#8C6B7A">${escapeXml(city)} · ${escapeXml(profile.folk)}</text>
+          <rect x="30" y="32" width="230" height="68" rx="18" fill="#fffdf1" opacity=".88"/>
+          <text x="54" y="61" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="20" font-weight="800" fill="#4a3000">MaxSu AI 绘图</text>
+          <text x="54" y="86" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="16" fill="#735f35">${escapeXml(city)} · ${escapeXml(profile.folk)}</text>
           <rect width="900" height="560" fill="transparent" filter="url(#grain)" opacity=".12"/>
         </svg>
       `;
@@ -1504,19 +1624,19 @@
       el.destinationTitle.textContent = `${city}民俗风情景点照`;
       el.destinationDesc.textContent = profile.desc;
       el.destinationChips.innerHTML = profile.chips.map(item => `<span class="destination-chip">${item}</span>`).join("");
-      el.destinationPrompt.textContent = `Loopy 推荐：${profile.landmark} · ${profile.folk} · 粉色小浣熊精选景点 🩷`;
+      el.destinationPrompt.textContent = destinationPrompt(city, profile);
     }
 
     function drawDestinationWithAi() {
       state.to = el.toCity.value.trim() || state.to;
       state.artSeed += 1;
       el.aiDrawBtn.disabled = true;
-      el.aiStatus.textContent = "Loopy 正在切换目的地景点图...";
+      el.aiStatus.textContent = "正在调用 AI 绘图流程生成目的地风情图...";
       window.setTimeout(() => {
         renderDestination();
-        el.aiStatus.textContent = "Loopy 已更新目的地景点插图 🩷";
+        el.aiStatus.textContent = "AI 绘图已更新，已突出当地景点与民俗元素";
         el.aiDrawBtn.disabled = false;
-        showToast(`🩷 ${state.to} 的 Loopy 景点图已更新`);
+        showToast(`${state.to} 的 AI 民俗风情景点照已生成。`);
       }, 520);
     }
 
@@ -1585,7 +1705,7 @@
       el.avgPrice.textContent = `¥${avg || "--"}`;
       el.alertCount.textContent = alerts;
       el.flightCount.textContent = rows.length;
-      el.airlineCount.textContent = `${airlines.length} 家航司`;
+      el.airlineCount.textContent = airlines.length;
     }
 
     function renderChart() {
@@ -1612,24 +1732,22 @@
         const row = state.rows.find(item => item.code === airline.code);
         return { ...airline, price: row?.price || randomBetween(480, 980), status: row?.status || "待同步" };
       }).sort((a, b) => a.price - b.price);
-      const html = cheapestByCarrier.map(item => `
+      el.airlineList.innerHTML = cheapestByCarrier.map(item => `
         <div class="airline">
           ${airlineLogo(item)}
           <div>
             <strong>${item.name}</strong>
-            <small>${item.region}${item.lowCost ? " · 廉航" : ""} · 最低¥${item.price}</small>
+            <small>${item.region}${item.lowCost ? " · 廉航" : ""} · 最低 ¥${item.price}</small>
           </div>
           <span class="tag ${item.lowCost ? "low-cost" : ""}">${item.lowCost ? "廉航" : item.status}</span>
         </div>
       `).join("");
-      el.airlineList.innerHTML = html;
-      el.airlineList2.innerHTML = html;
     }
 
     function renderTable(rows) {
       el.resultText.textContent = `${rows.length} 条结果`;
       if (!rows.length) {
-        el.flightRows.innerHTML = `<tr><td colspan="9"><div class="empty">🩷 没有符合条件的航班，调整筛选后再试哦～</div></td></tr>`;
+        el.flightRows.innerHTML = `<tr><td colspan="9"><div class="empty">没有符合条件的航班，调整筛选后再试。</div></td></tr>`;
         return;
       }
       el.flightRows.innerHTML = rows.map(row => {
@@ -1660,7 +1778,7 @@
     function renderAll() {
       const rows = filteredRows();
       el.routeTitle.textContent = routeTitle();
-      el.routeSub.textContent = `Loopy 正在监控 ${state.date} 的${isInternationalRoute() ? "国际" : "国内"}${state.cabin}机票价格，价格为演示数据。`;
+      el.routeSub.textContent = `正在监控 ${state.date} 的${isInternationalRoute() ? "国际" : "国内"}${state.cabin}机票价格，价格为演示数据。`;
       el.lastUpdated.textContent = new Date().toLocaleTimeString("zh-CN", { hour12: false });
       renderDestination();
       renderMetrics(rows);
@@ -1669,7 +1787,7 @@
       renderTable(rows);
       const alertRows = state.rows.filter(row => row.price <= state.maxPrice);
       if (alertRows.length) {
-        showToast(`🩷 ${alertRows.length} 个航班低于提醒价 ¥${state.maxPrice}，最低为 ${alertRows[0].name} ¥${alertRows[0].price}～`);
+        showToast(`${alertRows.length} 个航班低于提醒价 ¥${state.maxPrice}，最低为 ${alertRows[0].name} ¥${alertRows[0].price}。`);
       }
     }
 
@@ -1683,7 +1801,7 @@
     }
 
     function showToast(message) {
-      el.toastMessage.textContent = message;
+      el.toast.textContent = message;
       el.toast.classList.add("show");
       clearTimeout(showToast.timer);
       showToast.timer = setTimeout(() => el.toast.classList.remove("show"), 3200);
@@ -1702,7 +1820,7 @@
       link.download = `机票监控_${state.from}-${state.to}_${state.date}.csv`;
       link.click();
       URL.revokeObjectURL(url);
-      showToast("🩷 已导出当前筛选结果～");
+      showToast("已导出当前筛选结果。");
     }
 
     document.getElementById("searchForm").addEventListener("submit", event => {
@@ -1715,7 +1833,7 @@
       generateRows();
       renderAll();
       startTimer();
-      showToast(`🩷 ${state.from} 到 ${state.to} 的监控已更新～`);
+      showToast(`${state.from} 到 ${state.to} 的监控已更新。`);
     });
 
     document.getElementById("swapBtn").addEventListener("click", () => {
@@ -1730,7 +1848,7 @@
       state.to = el.toCity.value.trim() || state.to;
       state.artSeed += 1;
       renderDestination();
-      el.aiStatus.textContent = `Loopy 已切换到 ${state.to} 的景点图 🩷`;
+      el.aiStatus.textContent = `已切换到 ${state.to} 的 AI 绘图提示词`;
     });
 
     el.aiDrawBtn.addEventListener("click", drawDestinationWithAi);
@@ -1770,13 +1888,13 @@
       };
       localStorage.setItem("flightMonitorApiConfig", JSON.stringify(config));
       el.apiModal.classList.remove("open");
-      showToast("🩷 接口配置已保存在本地浏览器～");
+      showToast("接口配置已保存在本机浏览器。");
     });
     document.getElementById("resetApi").addEventListener("click", () => {
       localStorage.removeItem("flightMonitorApiConfig");
       document.getElementById("apiUrl").value = "";
       document.getElementById("apiToken").value = "";
-      showToast("🩷 接口配置已重置～");
+      showToast("接口配置已重置。");
     });
 
     function init() {
@@ -1795,4 +1913,3 @@
   </script>
 </body>
 </html>
-
