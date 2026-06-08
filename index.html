@@ -6,1966 +6,396 @@
   <title>Loopy ✈ 机票实时监控</title>
   <style>
     :root {
-      --bg: #FFF5F7;
-      --panel: #ffffff;
-      --panel-2: #FFE8EE;
-      --text: #3D2C3D;
-      --muted: #9A7B8A;
-      --line: #F5D0DA;
-      --primary: #FF7B9C;
-      --primary-dark: #E85A7A;
-      --primary-soft: #FFD6E0;
-      --accent: #D48FB5;
-      --green: #7BC8A4;
-      --orange: #F2A66A;
-      --red: #E86868;
-      --shadow: 0 8px 28px rgba(200, 100, 140, .12);
+      --bg: #FFF5F7; --panel: #ffffff; --panel-2: #FFE8EE;
+      --text: #3D2C3D; --muted: #9A7B8A; --line: #F5D0DA;
+      --primary: #FF7B9C; --primary-dark: #E85A7A;
+      --primary-soft: #FFD6E0; --accent: #D48FB5;
+      --green: #7BC8A4; --orange: #F2A66A; --red: #E86868;
+      --shadow: 0 8px 28px rgba(200,100,140,.12);
       --radius: 14px;
-      --loopy-shadow: 0 8px 24px rgba(232, 90, 122, .25);
     }
-
     * { box-sizing: border-box; }
-
     body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: "Microsoft YaHei", "PingFang SC", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background:
-        radial-gradient(ellipse at 15% 8%, rgba(255, 123, 156, .12), transparent 400px),
-        radial-gradient(ellipse at 85% 92%, rgba(212, 143, 181, .10), transparent 380px),
-        radial-gradient(ellipse at 50% 50%, rgba(255, 214, 224, .20), transparent 500px),
-        linear-gradient(175deg, rgba(255, 214, 224, .4), rgba(255, 245, 247, 0) 300px),
-        var(--bg);
+      margin: 0; min-height: 100vh;
+      font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+      background: radial-gradient(ellipse at 15% 8%, rgba(255,123,156,.12), transparent 400px), radial-gradient(ellipse at 85% 92%, rgba(212,143,181,.10), transparent 380px), linear-gradient(175deg, rgba(255,214,224,.4), rgba(255,245,247,0) 300px), var(--bg);
       color: var(--text);
     }
-
     button, input, select { font: inherit; }
-
-    .app {
-      width: min(1440px, calc(100% - 28px));
-      margin: 0 auto;
-      padding: 18px 0 24px;
-    }
-
-    .loopy-floating {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      overflow: hidden;
-      z-index: 0;
-    }
-    .loopy-floating .loopy-dot {
-      position: absolute;
-      border-radius: 50%;
-      object-fit: cover;
-      box-shadow: 0 4px 16px rgba(200,100,140,.12);
-      transition: transform .4s ease, opacity .4s ease;
-    }
-    .loopy-floating .loopy-dot:nth-child(1) {
-      top: 2%; left: 2%;
-      width: 56px; height: 56px;
-      opacity: .08;
-      animation: float 8s ease-in-out infinite;
-    }
-    .loopy-floating .loopy-dot:nth-child(2) {
-      top: 15%; right: 3%;
-      width: 42px; height: 42px;
-      opacity: .06;
-      animation: float 10s ease-in-out infinite 1s;
-    }
-    .loopy-floating .loopy-dot:nth-child(3) {
-      bottom: 10%; left: 4%;
-      width: 48px; height: 48px;
-      opacity: .07;
-      animation: float 9s ease-in-out infinite .5s;
-    }
-    .loopy-floating .loopy-dot:nth-child(4) {
-      bottom: 25%; right: 2%;
-      width: 36px; height: 36px;
-      opacity: .05;
-      animation: float 11s ease-in-out infinite 2s;
-    }
-    .loopy-floating .loopy-dot:nth-child(5) {
-      top: 45%; left: 1%;
-      width: 30px; height: 30px;
-      opacity: .06;
-      animation: float 7s ease-in-out infinite .3s;
-    }
-    .loopy-floating .loopy-dot:nth-child(6) {
-      top: 5%; left: 45%;
-      width: 34px; height: 34px;
-      opacity: .05;
-      animation: float 12s ease-in-out infinite 1.5s;
-    }
-    @keyframes float {
-      0%, 100% { transform: translateY(0) rotate(0deg); }
-      25% { transform: translateY(-12px) rotate(3deg); }
-      75% { transform: translateY(8px) rotate(-2deg); }
-    }
-
-    .topbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .brand {
-      display: flex;
-      gap: 16px;
-      align-items: center;
-      min-width: 0;
-      flex-wrap: wrap;
-    }
-
-    .loopy-avatar {
-      width: 64px;
-      height: 64px;
-      border-radius: 20px;
-      flex: 0 0 auto;
-      overflow: hidden;
-      border: 3px solid rgba(255,255,255,.9);
-      box-shadow: var(--loopy-shadow);
-      transition: transform .3s ease, box-shadow .3s ease;
-      position: relative;
-      cursor: pointer;
-      background: linear-gradient(145deg, #FFB5C8, #FF7B9C);
-    }
-    .loopy-avatar:hover {
-      transform: scale(1.06) rotate(-2deg);
-      box-shadow: 0 12px 32px rgba(232, 90, 122, .35);
-    }
-    .loopy-avatar:active {
-      transform: scale(.95);
-    }
-    .loopy-avatar img {
-      width: 100%;
-      height: 100%;
-      display: block;
-      object-fit: cover;
-    }
-    .loopy-avatar .badge {
-      position: absolute;
-      right: -4px;
-      bottom: -4px;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: #FF4D7A;
-      border: 2px solid #fff;
-      display: grid;
-      place-items: center;
-      font-size: 10px;
-      color: #fff;
-      box-shadow: 0 2px 8px rgba(232,90,122,.3);
-    }
-
-    .brand-text h1 {
-      margin: 0;
-      font-size: clamp(20px, 3vw, 28px);
-      letter-spacing: -.3px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      color: #5A2D4A;
-    }
-    .brand-text h1 .highlight {
-      background: linear-gradient(135deg, #FF7B9C, #D48FB5);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .brand-text .tagline {
-      margin: 2px 0 0;
-      color: var(--muted);
-      font-size: 13px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .brand-text .tagline .paw {
-      display: inline-block;
-      animation: pawWave 1.5s ease-in-out infinite;
-    }
-    @keyframes pawWave {
-      0%, 100% { transform: rotate(0deg); }
-      50% { transform: rotate(15deg); }
-    }
-
-    .status-strip {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    .pill {
-      min-height: 32px;
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      padding: 0 13px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, .82);
-      color: var(--muted);
-      white-space: nowrap;
-      font-size: 12px;
-      backdrop-filter: blur(4px);
-    }
-
-    .dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 0 4px rgba(123, 200, 164, .13);
-    }
-
-    .layout {
-      display: grid;
-      grid-template-columns: 320px minmax(0, 1fr);
-      gap: 16px;
-      align-items: start;
-      position: relative;
-      z-index: 1;
-    }
-
-    .panel {
-      background: rgba(255, 255, 255, .92);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(2px);
-    }
-
-    .side { position: sticky; top: 14px; overflow: hidden; }
-
-    .section {
-      padding: 15px;
-      border-bottom: 1px solid var(--line);
-    }
+    .app { width: min(1440px, calc(100% - 28px)); margin: 0 auto; padding: 18px 0 24px; }
+    .loopy-floating { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+    .loopy-floating img { position: absolute; border-radius: 50%; object-fit: cover; animation: float 8s ease-in-out infinite; }
+    .loopy-floating img:nth-child(1) { top: 2%; left: 2%; width: 56px; height: 56px; opacity: .08; }
+    .loopy-floating img:nth-child(2) { top: 15%; right: 3%; width: 42px; height: 42px; opacity: .06; animation-delay: 1s; }
+    .loopy-floating img:nth-child(3) { bottom: 10%; left: 4%; width: 48px; height: 48px; opacity: .07; animation-delay: .5s; }
+    .loopy-floating img:nth-child(4) { bottom: 25%; right: 2%; width: 36px; height: 36px; opacity: .05; animation-delay: 2s; }
+    .loopy-floating img:nth-child(5) { top: 45%; left: 1%; width: 30px; height: 30px; opacity: .06; animation-delay: .3s; }
+    .loopy-floating img:nth-child(6) { top: 5%; left: 45%; width: 34px; height: 34px; opacity: .05; animation-delay: 1.5s; }
+    @keyframes float { 0%,100% { transform: translateY(0) rotate(0deg); } 25% { transform: translateY(-12px) rotate(3deg); } 75% { transform: translateY(8px) rotate(-2deg); } }
+    .topbar { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: space-between; margin-bottom: 16px; position: relative; z-index: 1; }
+    .brand { display: flex; gap: 16px; align-items: center; }
+    .loopy-avatar { width: 64px; height: 64px; border-radius: 20px; overflow: hidden; border: 3px solid rgba(255,255,255,.9); box-shadow: 0 8px 24px rgba(232,90,122,.25); position: relative; cursor: pointer; transition: transform .3s; flex: 0 0 auto; }
+    .loopy-avatar:hover { transform: scale(1.06) rotate(-2deg); }
+    .loopy-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .loopy-avatar .badge { position: absolute; right: -4px; bottom: -4px; width: 22px; height: 22px; border-radius: 50%; background: #FF4D7A; border: 2px solid #fff; display: grid; place-items: center; font-size: 10px; color: #fff; }
+    .brand-text h1 { margin: 0; font-size: clamp(20px, 3vw, 28px); color: #5A2D4A; }
+    .brand-text h1 .highlight { background: linear-gradient(135deg, #FF7B9C, #D48FB5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .brand-text .tagline { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+    .status-strip { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+    .pill { min-height: 32px; display: inline-flex; align-items: center; gap: 7px; padding: 0 13px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.82); color: var(--muted); font-size: 12px; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px rgba(123,200,164,.13); }
+    .layout { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: 16px; align-items: start; position: relative; z-index: 1; }
+    .panel { background: rgba(255,255,255,.92); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .side { position: sticky; top: 14px; }
+    .section { padding: 15px; border-bottom: 1px solid var(--line); }
     .section:last-child { border-bottom: 0; }
+    .section h2, .content-head h2, .card h3 { margin: 0; font-size: 15px; }
+    .section-sub { margin: 5px 0 0; color: var(--muted); font-size: 12px; }
+    .form-grid { display: grid; gap: 11px; margin-top: 13px; }
+    .field { display: grid; gap: 6px; }
+    label { color: #6B3D55; font-size: 12px; font-weight: 600; }
+    input, select { width: 100%; height: 40px; border: 1px solid var(--line); border-radius: 10px; background: #fff; color: var(--text); padding: 0 11px; outline: none; }
+    input:focus, select:focus { border-color: rgba(232,90,122,.7); box-shadow: 0 0 0 3px rgba(255,123,156,.18); }
+    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+    .button-row { display: grid; grid-template-columns: 1fr 42px; gap: 9px; margin-top: 1px; }
+    .btn { height: 40px; border: 1px solid transparent; border-radius: 10px; background: linear-gradient(145deg, #FF7B9C, #E85A7A); color: #fff; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 7px; font-weight: 700; font-size: 14px; transition: all .16s; }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(232,90,122,.3); }
+    .icon-btn { width: 42px; padding: 0; background: #fff; color: var(--primary-dark); border-color: var(--line); }
+    .secondary { background: #fff; color: var(--text); border-color: var(--line); padding: 0 12px; font-size: 13px; }
+    .segmented { display: grid; grid-template-columns: repeat(3, 1fr); padding: 4px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; gap: 4px; }
+    .segmented button { height: 33px; border: 0; border-radius: 8px; background: transparent; color: var(--muted); cursor: pointer; font-weight: 700; font-size: 12px; }
+    .segmented button.active { background: #fff; color: #D45A7A; }
+    .checks { display: grid; gap: 8px; margin-top: 12px; }
+    .check { display: flex; align-items: center; gap: 8px; color: #5A3D4A; font-size: 13px; }
+    .check input { width: 16px; height: 16px; accent-color: var(--primary); }
+    .content { display: grid; gap: 16px; min-width: 0; }
+    .content-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 15px; }
+    .content-head p { margin: 5px 0 0; color: var(--muted); font-size: 12px; }
+    .head-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; padding: 0 15px 15px; }
+    .metric { padding: 13px; min-height: 96px; display: grid; align-content: space-between; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; position: relative; }
+    .metric span { color: var(--muted); font-size: 12px; }
+    .metric strong { display: block; margin-top: 6px; font-size: 26px; line-height: 1; }
+    .metric small { color: var(--green); font-weight: 700; font-size: 12px; }
+    .grid-2 { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr); gap: 16px; padding: 0 15px 15px; }
+    .card { min-width: 0; }
+    .card-head { display: flex; justify-content: space-between; gap: 10px; align-items: center; margin-bottom: 12px; }
+    .muted { color: var(--muted); font-size: 12px; }
 
-    .section h2,
-    .content-head h2,
-    .card h3 {
-      margin: 0;
-      font-size: 15px;
-    }
-
-    .section-sub {
-      margin: 5px 0 0;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.4;
-    }
-
-    .form-grid {
-      display: grid;
-      gap: 11px;
-      margin-top: 13px;
-    }
-
-    .field {
-      display: grid;
-      gap: 6px;
-    }
-
-    label {
-      color: #6B3D55;
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    input, select {
-      width: 100%;
-      height: 40px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background: #fff;
-      color: var(--text);
-      padding: 0 11px;
-      outline: none;
-      transition: border-color .16s ease, box-shadow .16s ease;
-    }
-    input:focus, select:focus {
-      border-color: rgba(232, 90, 122, .7);
-      box-shadow: 0 0 0 3px rgba(255, 123, 156, .18);
-    }
-
-    .row-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 9px;
-    }
-
-    .button-row {
-      display: grid;
-      grid-template-columns: 1fr 42px;
-      gap: 9px;
-      margin-top: 1px;
-    }
-
-    .btn {
-      height: 40px;
-      border: 1px solid transparent;
-      border-radius: 10px;
-      background: linear-gradient(145deg, #FF7B9C, #E85A7A);
-      color: #fff;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      font-weight: 700;
-      font-size: 14px;
-      transition: all .16s ease;
-      text-shadow: 0 1px 2px rgba(0,0,0,.08);
-      position: relative;
-      overflow: hidden;
-    }
-    .btn::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,.15) 100%);
-      pointer-events: none;
-    }
-    .btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(232, 90, 122, .3);
-    }
-    .btn:active {
-      transform: translateY(1px);
-      box-shadow: none;
-    }
-
-    .icon-btn {
-      width: 42px;
-      padding: 0;
-      background: #fff;
-      color: var(--primary-dark);
-      border-color: var(--line);
-    }
-    .icon-btn::after { display: none; }
-    .icon-btn:hover {
-      background: #FFF0F5;
-      border-color: rgba(232, 90, 122, .35);
-    }
-
-    .segmented {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      padding: 4px;
-      background: var(--panel-2);
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      gap: 4px;
-    }
-    .segmented button {
-      height: 33px;
-      border: 0;
-      border-radius: 8px;
-      background: transparent;
-      color: var(--muted);
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 12px;
-      transition: all .16s ease;
-    }
-    .segmented button.active {
-      background: #fff;
-      color: #D45A7A;
-      box-shadow: 0 2px 8px rgba(200, 100, 140, .1);
-    }
-
-    .checks {
-      display: grid;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .check {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: #5A3D4A;
-      font-size: 13px;
-    }
-    .check input {
-      width: 16px;
-      height: 16px;
-      accent-color: var(--primary);
-    }
-
-    .content {
-      display: grid;
-      gap: 16px;
-      min-width: 0;
-    }
-
-    .content-head {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 12px;
-      align-items: center;
-      padding: 15px;
-    }
-    .content-head p {
-      margin: 5px 0 0;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .head-actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    .secondary {
-      background: #fff;
-      color: var(--text);
-      border-color: var(--line);
-      padding: 0 12px;
-      font-size: 13px;
-    }
-    .secondary::after { display: none; }
-    .secondary:hover {
-      background: #FFF0F5;
-      border-color: #E8A0B8;
-    }
-
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
-      padding: 0 15px 15px;
-    }
-
-    .metric {
-      padding: 13px;
-      min-height: 96px;
-      display: grid;
-      align-content: space-between;
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      box-shadow: 0 4px 14px rgba(200, 130, 160, .06);
-      position: relative;
-      overflow: hidden;
-    }
-    .metric::before {
-      content: "";
-      position: absolute;
-      right: -8px;
-      bottom: -8px;
-      width: 56px;
-      height: 56px;
-      background: url(loopy.jpg) center/cover;
-      opacity: .07;
-      border-radius: 50%;
-      pointer-events: none;
-    }
-
-    .metric span {
-      color: var(--muted);
-      font-size: 12px;
-    }
-    .metric strong {
-      display: block;
-      margin-top: 6px;
-      font-size: 26px;
-      line-height: 1;
-      letter-spacing: 0;
-    }
-    .metric small {
-      color: var(--green);
-      font-weight: 700;
-      font-size: 12px;
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr);
-      gap: 16px;
-      padding: 0 15px 15px;
-    }
-
-    .card {
-      min-width: 0;
-    }
-
-    .card-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-
-    .muted {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .destination-card {
-      display: grid;
-      grid-template-columns: minmax(260px, .9fr) minmax(0, 1.1fr);
-      gap: 0;
-      overflow: hidden;
-      border-radius: var(--radius);
-      position: relative;
-    }
-
-    .destination-visual {
-      min-height: 280px;
-      position: relative;
-      background: linear-gradient(135deg, #FFD6E0, #D48FB5);
-      border-right: 1px solid var(--line);
-      overflow: hidden;
-    }
-
-    .destination-visual .loopy-watermark {
-      position: absolute;
-      right: 8px;
-      bottom: 8px;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      object-fit: cover;
-      opacity: .15;
-      pointer-events: none;
-    }
-
-    .destination-visual img.main-photo {
-      width: 100%;
-      height: 100%;
-      min-height: 280px;
-      display: block;
-      object-fit: cover;
-      transition: opacity .5s ease;
-    }
-    .destination-visual img.main-photo.loading {
-      opacity: 0;
-    }
-
-    .destination-badge {
-      position: absolute;
-      left: 12px;
-      top: 12px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      min-height: 26px;
-      padding: 0 11px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, .88);
-      color: #6B2E4A;
-      font-size: 11px;
-      font-weight: 800;
-      box-shadow: 0 4px 14px rgba(200, 100, 140, .14);
-      z-index: 2;
-      backdrop-filter: blur(4px);
-    }
-    .destination-badge .mini-loopy {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      object-fit: cover;
-      display: inline-block;
-    }
-
-    .gallery-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 2;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      border: 2px solid rgba(255,255,255,.7);
-      background: rgba(255,255,255,.82);
-      color: #D45A7A;
-      cursor: pointer;
-      display: grid;
-      place-items: center;
-      font-size: 15px;
-      font-weight: 700;
-      transition: all .2s ease;
-      backdrop-filter: blur(4px);
-    }
+    .destination-card { display: grid; grid-template-columns: minmax(260px, .9fr) minmax(0, 1.1fr); gap: 0; overflow: hidden; border-radius: var(--radius); }
+    .destination-visual { min-height: 280px; position: relative; background: linear-gradient(135deg, #FFD6E0, #D48FB5); border-right: 1px solid var(--line); overflow: hidden; }
+    .destination-visual img.main-photo { width: 100%; height: 100%; min-height: 280px; display: block; object-fit: cover; transition: opacity .5s; }
+    .destination-visual img.main-photo.loading { opacity: 0; }
+    .destination-visual .loopy-watermark { position: absolute; right: 8px; bottom: 8px; width: 44px; height: 44px; border-radius: 50%; object-fit: cover; opacity: .15; pointer-events: none; }
+    .destination-badge { position: absolute; left: 12px; top: 12px; display: inline-flex; align-items: center; gap: 6px; min-height: 26px; padding: 0 11px; border-radius: 999px; background: rgba(255,255,255,.88); color: #6B2E4A; font-size: 11px; font-weight: 800; z-index: 2; }
+    .destination-badge .mini-loopy { width: 18px; height: 18px; border-radius: 50%; object-fit: cover; display: inline-block; }
+    .gallery-btn { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; width: 30px; height: 30px; border-radius: 50%; border: 2px solid rgba(255,255,255,.7); background: rgba(255,255,255,.82); color: #D45A7A; cursor: pointer; display: grid; place-items: center; font-size: 15px; font-weight: 700; }
     .gallery-btn:hover { background: #fff; }
     .gallery-btn.prev { left: 10px; }
     .gallery-btn.next { right: 10px; }
-
-    .image-counter {
-      position: absolute;
-      right: 12px;
-      top: 12px;
-      z-index: 2;
-      padding: 3px 9px;
-      border-radius: 999px;
-      background: rgba(0,0,0,.4);
-      color: #fff;
-      font-size: 11px;
-      font-weight: 700;
-      backdrop-filter: blur(4px);
-    }
-
-    .destination-refresh {
-      position: absolute;
-      right: 12px;
-      bottom: 12px;
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      border: 2px solid rgba(255,255,255,.65);
-      background: rgba(255,255,255,.82);
-      color: #D45A7A;
-      cursor: pointer;
-      display: grid;
-      place-items: center;
-      font-size: 15px;
-      transition: all .2s ease;
-      z-index: 2;
-      backdrop-filter: blur(4px);
-    }
+    .image-counter { position: absolute; right: 12px; top: 12px; z-index: 2; padding: 3px 9px; border-radius: 999px; background: rgba(0,0,0,.4); color: #fff; font-size: 11px; font-weight: 700; }
+    .destination-refresh { position: absolute; right: 12px; bottom: 12px; width: 34px; height: 34px; border-radius: 50%; border: 2px solid rgba(255,255,255,.65); background: rgba(255,255,255,.82); color: #D45A7A; cursor: pointer; display: grid; place-items: center; font-size: 15px; z-index: 2; }
     .destination-refresh:hover { background: #fff; transform: scale(1.08); }
-    .destination-refresh:active { transform: scale(.92); }
-
-    .destination-copy {
-      padding: 16px;
-      display: grid;
-      gap: 10px;
-      align-content: center;
-      background:
-        linear-gradient(135deg, rgba(255, 214, 224, .86), rgba(255, 255, 255, .92) 54%),
-        #fff;
-    }
-
-    .destination-copy h2 {
-      margin: 0;
-      font-size: clamp(18px, 2vw, 26px);
-    }
-
-    .destination-copy p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.65;
-      font-size: 13px;
-    }
-
-    .destination-meta {
-      display: flex;
-      gap: 7px;
-      flex-wrap: wrap;
-    }
-
-    .destination-chip {
-      display: inline-flex;
-      align-items: center;
-      min-height: 26px;
-      padding: 0 9px;
-      border-radius: 999px;
-      background: rgba(212, 143, 181, .1);
-      color: #7B3D6B;
-      font-size: 11px;
-      font-weight: 800;
-    }
-
-    .ai-panel {
-      display: grid;
-      gap: 8px;
-      padding: 11px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background: rgba(255, 240, 245, .86);
-      margin-top: 14px;
-    }
-
-    .ai-row {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 9px;
-      align-items: center;
-    }
-
-    .ai-prompt {
-      margin: 0;
-      color: #6B3D55;
-      font-size: 11px;
-      line-height: 1.5;
-    }
-
-    .ai-status {
-      color: var(--muted);
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .chart-wrap {
-      height: 230px;
-      display: grid;
-      align-items: end;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background:
-        linear-gradient(to top, rgba(245, 198, 214, .65) 1px, transparent 1px) 0 0 / 100% 25%,
-        #fff;
-      padding: 14px 12px 8px;
-    }
-
-    .chart {
-      height: 100%;
-      display: grid;
-      grid-template-columns: repeat(7, minmax(26px, 1fr));
-      gap: 9px;
-      align-items: end;
-    }
-
-    .bar {
-      min-width: 0;
-      display: grid;
-      gap: 7px;
-      align-items: end;
-      text-align: center;
-      color: var(--muted);
-      font-size: 11px;
-    }
-
-    .bar-fill {
-      width: 100%;
-      min-height: 14px;
-      border-radius: 5px 5px 3px 3px;
-      background: linear-gradient(180deg, #FF7B9C, #D48FB5);
-      position: relative;
-    }
-    .bar-fill::before {
-      content: attr(data-price);
-      position: absolute;
-      left: 50%;
-      top: -22px;
-      transform: translateX(-50%);
-      color: var(--text);
-      font-weight: 700;
-      font-size: 11px;
-      white-space: nowrap;
-    }
-
-    .airline-list {
-      display: grid;
-      gap: 9px;
-      max-height: 230px;
-      overflow: auto;
-      padding-right: 2px;
-    }
-
-    .airline {
-      display: grid;
-      grid-template-columns: 34px minmax(0, 1fr) auto;
-      gap: 9px;
-      align-items: center;
-      padding: 8px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background: #fff;
-    }
-
-    .airline-logo {
-      width: 34px;
-      height: 34px;
-      border-radius: 8px;
-      display: grid;
-      place-items: center;
-      color: #fff;
-      font-weight: 800;
-      overflow: hidden;
-      border: 1px solid rgba(245, 198, 214, .9);
-    }
+    .destination-copy { padding: 16px; display: grid; gap: 10px; align-content: center; background: linear-gradient(135deg, rgba(255,214,224,.86), rgba(255,255,255,.92) 54%), #fff; }
+    .destination-copy h2 { margin: 0; font-size: clamp(18px, 2vw, 26px); }
+    .destination-copy p { margin: 0; color: var(--muted); line-height: 1.65; font-size: 13px; }
+    .destination-meta { display: flex; gap: 7px; flex-wrap: wrap; }
+    .destination-chip { display: inline-flex; align-items: center; min-height: 26px; padding: 0 9px; border-radius: 999px; background: rgba(212,143,181,.1); color: #7B3D6B; font-size: 11px; font-weight: 800; }
+    .ai-panel { display: grid; gap: 8px; padding: 11px; border: 1px solid var(--line); border-radius: 10px; background: rgba(255,240,245,.86); margin-top: 14px; }
+    .ai-row { display: grid; grid-template-columns: 1fr auto; gap: 9px; align-items: center; }
+    .ai-prompt { margin: 0; color: #6B3D55; font-size: 11px; }
+    .ai-status { color: var(--muted); font-size: 11px; font-weight: 700; }
+    .chart-wrap { height: 230px; display: grid; align-items: end; border: 1px solid var(--line); border-radius: 10px; background: linear-gradient(to top, rgba(245,198,214,.65) 1px, transparent 1px) 0 0/100% 25%, #fff; padding: 14px 12px 8px; }
+    .chart { height: 100%; display: grid; grid-template-columns: repeat(7, minmax(26px, 1fr)); gap: 9px; align-items: end; }
+    .bar { min-width: 0; display: grid; gap: 7px; align-items: end; text-align: center; color: var(--muted); font-size: 11px; }
+    .bar-fill { width: 100%; min-height: 14px; border-radius: 5px 5px 3px 3px; background: linear-gradient(180deg, #FF7B9C, #D48FB5); position: relative; }
+    .bar-fill::before { content: attr(data-price); position: absolute; left: 50%; top: -22px; transform: translateX(-50%); color: var(--text); font-weight: 700; font-size: 11px; white-space: nowrap; }
+    .airline-list { display: grid; gap: 9px; max-height: 230px; overflow: auto; }
+    .airline { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 9px; align-items: center; padding: 8px; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+    .airline-logo { width: 34px; height: 34px; border-radius: 8px; display: grid; place-items: center; color: #fff; font-weight: 800; overflow: hidden; border: 1px solid rgba(245,198,214,.9); }
     .airline-logo span { font-size: 11px; }
-
-    .airline strong {
-      display: block;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      font-size: 13px;
-    }
-
-    .airline small {
-      color: var(--muted);
-      font-size: 11px;
-    }
-
-    .tag {
-      display: inline-flex;
-      align-items: center;
-      min-height: 22px;
-      padding: 0 7px;
-      border-radius: 999px;
-      background: #F0F5F0;
-      color: var(--green);
-      font-size: 11px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-    .tag.low-cost {
-      background: #FFF5E8;
-      color: var(--orange);
-    }
-
+    .airline strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; }
+    .airline small { color: var(--muted); font-size: 11px; }
+    .tag { display: inline-flex; align-items: center; min-height: 22px; padding: 0 7px; border-radius: 999px; background: #F0F5F0; color: var(--green); font-size: 11px; font-weight: 700; white-space: nowrap; }
+    .tag.low-cost { background: #FFF5E8; color: var(--orange); }
     .table-card { overflow: hidden; }
-
-    .table-toolbar {
-      display: grid;
-      grid-template-columns: minmax(200px, 1fr) auto;
-      gap: 9px;
-      align-items: center;
-      padding: 12px 15px;
-      border-bottom: 1px solid var(--line);
-      background: rgba(255, 232, 238, .78);
-    }
+    .table-toolbar { display: grid; grid-template-columns: minmax(200px, 1fr) auto; gap: 9px; align-items: center; padding: 12px 15px; border-bottom: 1px solid var(--line); background: rgba(255,232,238,.78); }
     .table-toolbar input { height: 36px; font-size: 13px; }
-
-    .table-wrap {
-      overflow: auto;
-      max-height: 480px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 880px;
-      background: #fff;
-    }
-
-    th, td {
-      padding: 11px 12px;
-      border-bottom: 1px solid var(--line);
-      text-align: left;
-      vertical-align: middle;
-      white-space: nowrap;
-      font-size: 13px;
-    }
-
-    th {
-      position: sticky;
-      top: 0;
-      z-index: 1;
-      background: #FFE8EE;
-      color: #7B3D6B;
-      font-size: 11px;
-      letter-spacing: 0;
-      text-transform: uppercase;
-    }
-
+    .table-wrap { overflow: auto; max-height: 480px; }
+    table { width: 100%; border-collapse: collapse; min-width: 880px; background: #fff; }
+    th, td { padding: 11px 12px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; font-size: 13px; }
+    th { position: sticky; top: 0; z-index: 1; background: #FFE8EE; color: #7B3D6B; font-size: 11px; }
     tbody tr:hover { background: #FFF0F5; }
-
-    .price {
-      font-size: 17px;
-      color: var(--primary-dark);
-      font-weight: 800;
-    }
-
+    .price { font-size: 17px; color: var(--primary-dark); font-weight: 800; }
     .change.up { color: var(--red); font-weight: 800; }
     .change.down { color: var(--green); font-weight: 800; }
     .warn { color: var(--orange); font-weight: 800; }
-
-    .empty {
-      padding: 28px 14px;
-      color: var(--muted);
-      text-align: center;
-      font-size: 13px;
-    }
-
-    .toast {
-      position: fixed;
-      right: 16px;
-      bottom: 16px;
-      width: min(340px, calc(100% - 32px));
-      padding: 12px 16px;
-      border-radius: 12px;
-      background: linear-gradient(145deg, #6B3D55, #3D2C3D);
-      color: #fff;
-      box-shadow: 0 12px 34px rgba(61, 44, 61, .25);
-      transform: translateY(16px);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .2s ease, transform .2s ease;
-      z-index: 100;
-      font-size: 13px;
-      line-height: 1.4;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .toast .toast-loopy {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      object-fit: cover;
-      flex: 0 0 auto;
-    }
-    .toast.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      display: none;
-      place-items: center;
-      padding: 16px;
-      background: rgba(61, 44, 61, .38);
-      z-index: 20;
-    }
+    .empty { padding: 28px 14px; color: var(--muted); text-align: center; font-size: 13px; }
+    .toast { position: fixed; right: 16px; bottom: 16px; width: min(340px, calc(100% - 32px)); padding: 12px 16px; border-radius: 12px; background: linear-gradient(145deg, #6B3D55, #3D2C3D); color: #fff; transform: translateY(16px); opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 100; font-size: 13px; display: flex; align-items: center; gap: 8px; }
+    .toast img { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; flex: 0 0 auto; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .modal-backdrop { position: fixed; inset: 0; display: none; place-items: center; padding: 16px; background: rgba(61,44,61,.38); z-index: 20; }
     .modal-backdrop.open { display: grid; }
-
-    .modal {
-      width: min(520px, 100%);
-      background: #fff;
-      border-radius: var(--radius);
-      border: 1px solid var(--line);
-      box-shadow: 0 12px 34px rgba(200, 130, 160, .2);
-      overflow: hidden;
-    }
-
-    .modal-head, .modal-foot {
-      padding: 13px 15px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      background: #FFE8EE;
-      border-bottom: 1px solid var(--line);
-    }
+    .modal { width: min(520px, 100%); background: #fff; border-radius: var(--radius); border: 1px solid var(--line); }
+    .modal-head, .modal-foot { padding: 13px 15px; display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #FFE8EE; border-bottom: 1px solid var(--line); }
     .modal-head h2 { margin: 0; font-size: 16px; }
     .modal-body { padding: 15px; display: grid; gap: 11px; }
-    .modal-foot {
-      justify-content: flex-end;
-      border-top: 1px solid var(--line);
-      border-bottom: 0;
-    }
-
-    .api-box {
-      min-height: 80px;
-      resize: vertical;
-      width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 10px;
-      font-family: \"Consolas\", \"Courier New\", monospace;
-      font-size: 12px;
-      outline: none;
-    }
-    .api-box:focus {
-      border-color: rgba(232, 90, 122, .7);
-      box-shadow: 0 0 0 3px rgba(255, 123, 156, .18);
-    }
-
-    .carrier-cell {
-      display: grid;
-      grid-template-columns: 32px minmax(0, 1fr);
-      gap: 8px;
-      align-items: center;
-    }
-    .carrier-cell .airline-logo {
-      width: 32px;
-      height: 32px;
-      border-radius: 7px;
-    }
-
-    .loopy-popup {
-      position: fixed;
-      right: 20px;
-      bottom: 80px;
-      z-index: 50;
-      cursor: pointer;
-      transition: transform .3s ease;
-    }
-    .loopy-popup:hover {
-      transform: scale(1.05);
-    }
-    .loopy-popup .popup-img {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid #fff;
-      box-shadow: 0 6px 20px rgba(232,90,122,.25);
-      transition: box-shadow .3s ease;
-    }
-    .loopy-popup:hover .popup-img {
-      box-shadow: 0 8px 28px rgba(232,90,122,.4);
-    }
-    .loopy-popup .popup-bubble {
-      position: absolute;
-      right: 58px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 12px 12px 12px 4px;
-      padding: 6px 12px;
-      white-space: nowrap;
-      font-size: 12px;
-      color: var(--text);
-      box-shadow: 0 4px 14px rgba(200,100,140,.1);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .3s ease;
-    }
-    .loopy-popup:hover .popup-bubble {
-      opacity: 1;
-    }
-
-    @media (max-width: 900px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
-      .side {
-        position: static;
-      }
-      .destination-card {
-        grid-template-columns: 1fr;
-      }
-      .destination-visual {
-        min-height: 200px;
-        border-right: 0;
-        border-bottom: 1px solid var(--line);
-      }
-      .grid-2 {
-        grid-template-columns: 1fr;
-      }
-      .metrics {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
+    .modal-foot { justify-content: flex-end; border-top: 1px solid var(--line); border-bottom: 0; }
+    .loopy-popup { position: fixed; right: 20px; bottom: 80px; z-index: 50; cursor: pointer; }
+    .loopy-popup:hover { transform: scale(1.05); }
+    .loopy-popup img { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 3px solid #fff; box-shadow: 0 6px 20px rgba(232,90,122,.25); }
+    .loopy-popup .popup-bubble { position: absolute; right: 58px; top: 50%; transform: translateY(-50%); background: #fff; border: 1px solid var(--line); border-radius: 12px 12px 12px 4px; padding: 6px 12px; white-space: nowrap; font-size: 12px; color: var(--text); opacity: 0; pointer-events: none; transition: opacity .3s; }
+    .loopy-popup:hover .popup-bubble { opacity: 1; }
+    .carrier-cell { display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 8px; align-items: center; }
+    @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } .side { position: static; } .destination-card { grid-template-columns: 1fr; } .grid-2 { grid-template-columns: 1fr; } .metrics { grid-template-columns: repeat(2, 1fr); } }
   </style>
-  <link rel=\"icon\" type=\"image/jpeg\" href=\"loopy.jpg\">
+  <link rel="icon" type="image/jpeg" href="loopy.jpg">
 </head>
 <body>
-  <div class=\"loopy-floating\" id=\"loopyFloating\"></div>
-
-  <div class=\"app\">
-    <div class=\"topbar\">
-      <div class=\"brand\">
-        <div class=\"loopy-avatar\" id=\"loopyAvatar\" title=\"我是 Loopy！单击有惊喜\">
-          <img src=\"loopy.jpg\" alt=\"Loopy\" />
-          <span class=\"badge\">&#9829;</span>
-        </div>
-        <div class=\"brand-text\">
-          <h1><span class=\"highlight\">Loopy</span> &#x2708; 机票监控</h1>
-          <div class=\"tagline\">
-            <span class=\"paw\">&#x1F43E;</span>
-            粉色小浣熊帮你盯着机票价格
-          </div>
-        </div>
+<div class="loopy-floating" id="loopyFloating"></div>
+<div class="app">
+  <div class="topbar">
+    <div class="brand">
+      <div class="loopy-avatar" id="loopyAvatar" title="我是 Loopy！">
+        <img src="loopy.jpg" alt="Loopy" />
+        <span class="badge">&#9829;</span>
       </div>
-      <div class=\"status-strip\">
-        <span class=\"pill\"><span class=\"dot\"></span><span id=\"syncStatus\">实时监控中</span></span>
-        <span class=\"pill\"><span id=\"lastUpdated\">--:--:--</span></span>
+      <div class="brand-text">
+        <h1><span class="highlight">Loopy</span> &#x2708; 机票监控</h1>
+        <div class="tagline">&#x1F43E; 粉色小浣熊帮你盯着机票价格</div>
       </div>
     </div>
-
-    <div class=\"layout\">
-      <div class=\"side panel\">
-        <div class=\"section\">
-          <h2>&#9829; 搜索航班</h2>
-          <p class=\"section-sub\">告诉我从哪到哪，Loopy 帮你盯着价格</p>
-          <form id=\"searchForm\" class=\"form-grid\">
-            <div class=\"field\">
-              <label>出发城市</label>
-              <div class=\"row-2\">
-                <input id=\"fromCity\" list=\"cityList\" value=\"上海\" placeholder=\"例如 上海\" />
-                <datalist id=\"cityList\">
-                  <option value=\"上海\"><option value=\"北京\"><option value=\"广州\"><option value=\"深圳\">
-                  <option value=\"成都\"><option value=\"杭州\"><option value=\"南京\"><option value=\"重庆\">
-                  <option value=\"武汉\"><option value=\"西安\"><option value=\"厦门\"><option value=\"昆明\">
-                  <option value=\"青岛\"><option value=\"长沙\"><option value=\"三亚\"><option value=\"大连\">
-                  <option value=\"东京\"><option value=\"大阪\"><option value=\"首尔\"><option value=\"香港\">
-                  <option value=\"曼谷\"><option value=\"新加坡\"><option value=\"普吉岛\"><option value=\"吉隆坡\">
-                  <option value=\"伦敦\"><option value=\"巴黎\"><option value=\"纽约\"><option value=\"悉尼\">
-                  <option value=\"洛杉矶\"><option value=\"台北\"><option value=\"澳门\"><option value=\"清迈\">
-                </datalist>
-                <input id=\"toCity\" list=\"cityList\" value=\"东京\" placeholder=\"例如 东京\" />
-              </div>
+    <div class="status-strip">
+      <span class="pill"><span class="dot"></span><span id="syncStatus">实时监控中</span></span>
+      <span class="pill"><span id="lastUpdated">--:--:--</span></span>
+    </div>
+  </div>
+  <div class="layout">
+    <div class="side panel">
+      <div class="section">
+        <h2>&#9829; 搜索航班</h2>
+        <p class="section-sub">告诉我从哪到哪，Loopy 帮你盯着价格</p>
+        <form id="searchForm" class="form-grid">
+          <div class="field">
+            <label>出发城市</label>
+            <div class="row-2">
+              <input id="fromCity" list="cityList" value="上海" />
+              <datalist id="cityList">
+                <option value="上海"><option value="北京"><option value="广州"><option value="深圳">
+                <option value="成都"><option value="杭州"><option value="南京"><option value="重庆">
+                <option value="武汉"><option value="西安"><option value="厦门"><option value="昆明">
+                <option value="青岛"><option value="长沙"><option value="三亚"><option value="大连">
+                <option value="东京"><option value="大阪"><option value="首尔"><option value="香港">
+                <option value="曼谷"><option value="新加坡"><option value="普吉岛"><option value="吉隆坡">
+                <option value="伦敦"><option value="巴黎"><option value="纽约"><option value="悉尼">
+                <option value="洛杉矶"><option value="台北"><option value="澳门"><option value="清迈">
+              </datalist>
+              <input id="toCity" list="cityList" value="东京" />
             </div>
-            <div class=\"field\">
-              <label>出发日期</label>
-              <input id=\"departDate\" type=\"date\" />
-            </div>
-            <div class=\"row-2\">
-              <div class=\"field\">
-                <label>提醒价格</label>
-                <input id=\"maxPrice\" type=\"number\" value=\"650\" min=\"100\" max=\"99999\" />
-              </div>
-              <div class=\"field\">
-                <label>刷新间隔(秒)</label>
-                <input id=\"interval\" type=\"number\" value=\"30\" min=\"5\" max=\"600\" />
-              </div>
-            </div>
-            <div class=\"button-row\">
-              <button class=\"btn\" type=\"submit\">&#9829; Loopy 开始监控</button>
-              <button class=\"btn icon-btn\" id=\"swapBtn\" type=\"button\" title=\"交换出发地和目的地\">&#x21C4;</button>
-            </div>
-          </form>
-        </div>
-
-        <div class=\"section\">
-          <h2>&#9829; 舱位选择</h2>
-          <div class=\"segmented\" style=\"margin-top:9px\">
-            <button data-cabin=\"经济舱\" class=\"active\">经济舱</button>
-            <button data-cabin=\"超级经济舱\">超级经济舱</button>
-            <button data-cabin=\"商务舱\">商务舱</button>
           </div>
-        </div>
-
-        <div class=\"section\">
-          <h2>&#9829; 筛选</h2>
-          <div class=\"checks\" id=\"filters\">
-            <label class=\"check\"><input type=\"checkbox\" value=\"direct\" /> 仅直飞</label>
-            <label class=\"check\"><input type=\"checkbox\" value=\"baggage\" /> 含行李额</label>
-            <label class=\"check\"><input type=\"checkbox\" value=\"refundable\" /> 可退改</label>
-            <label class=\"check\"><input type=\"checkbox\" value=\"alert\" /> 仅看低价提醒</label>
+          <div class="field">
+            <label>出发日期</label>
+            <input id="departDate" type="date" />
           </div>
-          <div class=\"ai-panel\">
-            <div class=\"ai-row\">
-              <p class=\"ai-prompt\" id=\"aiPrompt\">Loopy 正在寻找最佳风景照...</p>
-              <span class=\"ai-status\" id=\"aiStatus\">就绪</span>
+          <div class="row-2">
+            <div class="field">
+              <label>提醒价格</label>
+              <input id="maxPrice" type="number" value="650" min="100" max="99999" />
             </div>
-            <button class=\"btn\" id=\"refreshPhotoBtn\" type=\"button\" style=\"height:32px;font-size:12px\">&#9829; 换一张风景照</button>
+            <div class="field">
+              <label>刷新间隔(秒)</label>
+              <input id="interval" type="number" value="30" min="5" max="600" />
+            </div>
           </div>
+          <div class="button-row">
+            <button class="btn" type="submit">&#9829; Loopy 开始监控</button>
+            <button class="btn icon-btn" id="swapBtn" type="button" title="交换">&#x21C4;</button>
+          </div>
+        </form>
+      </div>
+      <div class="section">
+        <h2>&#9829; 舱位选择</h2>
+        <div class="segmented" style="margin-top:9px">
+          <button data-cabin="经济舱" class="active">经济舱</button>
+          <button data-cabin="超级经济舱">超级经济舱</button>
+          <button data-cabin="商务舱">商务舱</button>
         </div>
       </div>
-
-      <div class=\"content\">
-        <div class=\"panel destination-card\">
-          <div class=\"destination-visual\">
-            <img class=\"main-photo loading\" id=\"destinationPhoto\" src=\"\" alt=\"目的地风景\" />
-            <img src=\"loopy.jpg\" class=\"loopy-watermark\" alt=\"\" />
-            <span class=\"destination-badge\" id=\"destinationBadge\">
-              <img src=\"loopy.jpg\" class=\"mini-loopy\" alt=\"\" />
-              目的地景点
-            </span>
-            <span class=\"image-counter\" id=\"imageCounter\">1/3</span>
-            <button class=\"gallery-btn prev\" id=\"prevPhotoBtn\" type=\"button\" title=\"上一张\">&#x2039;</button>
-            <button class=\"gallery-btn next\" id=\"nextPhotoBtn\" type=\"button\" title=\"下一张\">&#x203a;</button>
-            <button class=\"destination-refresh\" id=\"refreshDestinationBtn\" type=\"button\" title=\"换一张\">&#x21bb;</button>
-          </div>
-          <div class=\"destination-copy\">
-            <div class=\"destination-meta\" id=\"destinationChips\"></div>
-            <h2 id=\"destinationTitle\">目的地风景</h2>
-            <p id=\"destinationDesc\">Loopy 正在为你寻找当地最美的景色...</p>
-          </div>
+      <div class="section">
+        <h2>&#9829; 筛选</h2>
+        <div class="checks" id="filters">
+          <label class="check"><input type="checkbox" value="direct" /> 仅直飞</label>
+          <label class="check"><input type="checkbox" value="baggage" /> 含行李额</label>
+          <label class="check"><input type="checkbox" value="refundable" /> 可退改</label>
+          <label class="check"><input type="checkbox" value="alert" /> 仅看低价提醒</label>
         </div>
-
-        <div class=\"panel\">
-          <div class=\"content-head\">
-            <div>
-              <h2 id=\"routeTitle\">所有航班</h2>
-              <p id=\"routeSub\">Loopy 正在监控机票价格</p>
-            </div>
-            <div class=\"head-actions\">
-              <button class=\"btn secondary\" id=\"exportBtn\">导出 CSV</button>
-              <button class=\"btn secondary\" id=\"apiBtn\">API</button>
-            </div>
+        <div class="ai-panel">
+          <div class="ai-row">
+            <p class="ai-prompt" id="aiPrompt">Loopy 正在寻找最佳风景照...</p>
+            <span class="ai-status" id="aiStatus">就绪</span>
           </div>
-
-          <div class=\"metrics\">
-            <div class=\"metric\">
-              <span>最低价</span>
-              <strong id=\"minPrice\">&#165;--</strong>
-              <small id=\"minCarrier\">--</small>
-            </div>
-            <div class=\"metric\">
-              <span>均价</span>
-              <strong id=\"avgPrice\">&#165;--</strong>
-              <small>实时计算</small>
-            </div>
-            <div class=\"metric\">
-              <span>低价提醒</span>
-              <strong id=\"alertCount\">0</strong>
-              <small>低于提醒价</small>
-            </div>
-            <div class=\"metric\">
-              <span>航班数</span>
-              <strong id=\"flightCount\">0</strong>
-              <small id=\"airlineCount\">0 家航司</small>
-            </div>
-          </div>
-
-          <div class=\"grid-2\">
-            <div class=\"card\">
-              <div class=\"card-head\">
-                <h3>&#9829; 价格趋势</h3>
-                <span class=\"muted\">近7天预测</span>
-              </div>
-              <div class=\"chart-wrap\">
-                <div class=\"chart\" id=\"chart\"></div>
-              </div>
-            </div>
-            <div class=\"card\">
-              <div class=\"card-head\">
-                <h3>&#9829; 航司最低价</h3>
-                <span class=\"muted\">按价格排序</span>
-              </div>
-              <div class=\"airline-list\" id=\"airlineList\"></div>
-            </div>
-          </div>
-
-          <div class=\"table-card\">
-            <div class=\"table-toolbar\">
-              <input id=\"tableSearch\" placeholder=\"搜索航班号、航司、机型...\" />
-              <span class=\"muted\" id=\"resultText\">0 条结果</span>
-            </div>
-            <div class=\"table-wrap\">
-              <table>
-                <thead>
-                  <tr>
-                    <th>航司</th>
-                    <th>航班</th>
-                    <th>时间</th>
-                    <th>机场</th>
-                    <th>机型</th>
-                    <th>舱位</th>
-                    <th>价格</th>
-                    <th>变化</th>
-                    <th>状态</th>
-                  </tr>
-                </thead>
-                <tbody id=\"flightRows\"></tbody>
-              </table>
-            </div>
-          </div>
+          <button class="btn" id="refreshPhotoBtn" type="button" style="height:32px;font-size:12px">&#9829; 换一张风景照</button>
         </div>
       </div>
     </div>
-  </div>
-
-  <div class=\"loopy-popup\" id=\"loopyPopup\" title=\"我是 Loopy!\">
-    <img src=\"loopy.jpg\" class=\"popup-img\" alt=\"Loopy\" />
-    <span class=\"popup-bubble\">&#9829; 嗨！</span>
-  </div>
-
-  <div class=\"toast\" id=\"toast\">
-    <img src=\"loopy.jpg\" class=\"toast-loopy\" alt=\"\" />
-    <span id=\"toastMessage\"></span>
-  </div>
-
-  <div class=\"modal-backdrop\" id=\"apiModal\">
-    <div class=\"modal\">
-      <div class=\"modal-head\">
-        <h2>&#9829; 三方接口配置</h2>
-        <button class=\"btn secondary\" id=\"closeApi\" style=\"height:32px;padding:0 11px;font-size:12px\">关闭</button>
-      </div>
-      <div class=\"modal-body\">
-        <div class=\"field\">
-          <label>API Endpoint</label>
-          <input id=\"apiUrl\" placeholder=\"https://api.example.com/flights\" />
+    <div class="content">
+      <div class="panel destination-card">
+        <div class="destination-visual">
+          <img class="main-photo loading" id="destinationPhoto" src="" alt="目的地风景" />
+          <img src="loopy.jpg" class="loopy-watermark" alt="" />
+          <span class="destination-badge" id="destinationBadge"><img src="loopy.jpg" class="mini-loopy" alt="" /> 目的地景点</span>
+          <span class="image-counter" id="imageCounter">1/3</span>
+          <button class="gallery-btn prev" id="prevPhotoBtn" type="button" title="上一张">&#x2039;</button>
+          <button class="gallery-btn next" id="nextPhotoBtn" type="button" title="下一张">&#x203a;</button>
+          <button class="destination-refresh" id="refreshDestinationBtn" type="button" title="换一张">&#x21bb;</button>
         </div>
-        <div class=\"field\">
-          <label>Token / API Key</label>
-          <input id=\"apiToken\" type=\"password\" placeholder=\"sk-...\" />
-        </div>
-        <div class=\"field\">
-          <label>字段映射 (JSON)</label>
-          <textarea id=\"apiMapping\" class=\"api-box\" placeholder='{\"price\":\"price\",\"airline\":\"carrier\",...}'></textarea>
+        <div class="destination-copy">
+          <div class="destination-meta" id="destinationChips"></div>
+          <h2 id="destinationTitle">目的地风景</h2>
+          <p id="destinationDesc">Loopy 正在为你寻找当地最美的景色...</p>
         </div>
       </div>
-      <div class=\"modal-foot\">
-        <button class=\"btn secondary\" id=\"resetApi\" style=\"font-size:12px;height:32px\">重置</button>
-        <button class=\"btn\" id=\"saveApi\" style=\"font-size:12px;height:32px\">保存配置</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // ━━ Loopy 备用回退图片 ━━
-    const LOOPY_FALLBACK_SVG = 'data:image/svg+xml;base64,' + btoa('<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 200 200\"><defs><radialGradient id=\"lbg\" cx=\"50%\" cy=\"40%\" r=\"60%\"><stop offset=\"0%\" stop-color=\"#FFE4EC\"/><stop offset=\"100%\" stop-color=\"#FF8FAB\"/></radialGradient></defs><circle cx=\"100\" cy=\"100\" r=\"95\" fill=\"url(#lbg)\"/><ellipse cx=\"70\" cy=\"82\" rx=\"22\" ry=\"26\" fill=\"#fff\" opacity=\".92\"/><ellipse cx=\"130\" cy=\"82\" rx=\"22\" ry=\"26\" fill=\"#fff\" opacity=\".92\"/><ellipse cx=\"68\" cy=\"80\" rx=\"12\" ry=\"14\" fill=\"#3D2C3D\"/><ellipse cx=\"128\" cy=\"80\" rx=\"12\" ry=\"14\" fill=\"#3D2C3D\"/><ellipse cx=\"68\" cy=\"78\" rx=\"5\" ry=\"6\" fill=\"#fff\" opacity=\".85\"/><ellipse cx=\"128\" cy=\"78\" rx=\"5\" ry=\"6\" fill=\"#fff\" opacity=\".85\"/><ellipse cx=\"98\" cy=\"128\" rx=\"40\" ry=\"30\" fill=\"#FFB3C6\"/><path d=\"M75 135 Q98 160 120 135\" fill=\"none\" stroke=\"#D45A82\" stroke-width=\"5\" stroke-linecap=\"round\"/><circle cx=\"92\" cy=\"105\" r=\"5\" fill=\"#D45A82\"/><circle cx=\"108\" cy=\"105\" r=\"5\" fill=\"#D45A82\"/><path d=\"M20 140 Q40 100 60 120\" fill=\"none\" stroke=\"#E8608C\" stroke-width=\"8\" stroke-linecap=\"round\" opacity=\".6\"/><path d=\"M180 140 Q160 100 140 120\" fill=\"none\" stroke=\"#E8608C\" stroke-width=\"8\" stroke-linecap=\"round\" opacity=\".6\"/></svg>');
-
-    // ━━ 目的地城市 URL 池 ━━
-    const DESTINATION_IMAGES = {
-      \"东京\": [
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Tokyo_SkyTree_2017.jpg/900px-Tokyo_SkyTree_2017.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Tokyo_Tower_2020.jpg/900px-Tokyo_Tower_2020.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Shibuya_crossing_2019.jpg/900px-Shibuya_crossing_2019.jpg\"
-      ],
-      \"上海\": [
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Shanghai_skyline_from_the_Bund_2014.jpg/900px-Shanghai_skyline_from_the_Bund_2014.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Pudong_skyline_Shanghai_2015.jpg/900px-Pudong_skyline_Shanghai_2015.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Yuyuan_Garden_Shanghai_2017.jpg/900px-Yuyuan_Garden_Shanghai_2017.jpg\"
-      ],
-      \"北京\": [
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Forbidden_City_2019.jpg/900px-Forbidden_City_2019.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Great_Wall_of_China_2018.jpg/900px-Great_Wall_of_China_2018.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Temple_of_Heaven_2017.jpg/900px-Temple_of_Heaven_2017.jpg\"
-      ],
-      \"香港\": [
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Hong_Kong_Night_Skyline_2018.jpg/900px-Hong_Kong_Night_Skyline_2018.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Victoria_Harbour_2019.jpg/900px-Victoria_Harbour_2019.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Hong_Kong_Peak_2020.jpg/900px-Hong_Kong_Peak_2020.jpg\"
-      ],
-      \"首尔\": [
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Gyeongbokgung_Palace_2016.jpg/900px-Gyeongbokgung_Palace_2016.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/N_Seoul_Tower_2019.jpg/900px-N_Seoul_Tower_2019.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Bukchon_Hanok_2018.jpg/900px-Bukchon_Hanok_2018.jpg\"
-      ],
-      \"曼谷\": [
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Wat_Phra_Kaew_2015.jpg/900px-Wat_Phra_Kaew_2015.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Wat_Arun_2019.jpg/900px-Wat_Arun_2019.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Grand_Palace_Bangkok_2017.jpg/900px-Grand_Palace_Bangkok_2017.jpg\"
-      ],
-      \"新加坡\": [
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Marina_Bay_Sands_2019.jpg/900px-Marina_Bay_Sands_2019.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Gardens_by_the_Bay_2020.jpg/900px-Gardens_by_the_Bay_2020.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Sentosa_Island_2018.jpg/900px-Sentosa_Island_2018.jpg\"
-      ],
-      \"普吉岛\": [
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Phi_Phi_Islands_2019.jpg/900px-Phi_Phi_Islands_2019.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Phuket_Beach_2018.jpg/900px-Phuket_Beach_2018.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Big_Buddha_Phuket_2017.jpg/900px-Big_Buddha_Phuket_2017.jpg\"
-      ],
-      \"吉隆坡\": [
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Petronas_Towers_2019.jpg/900px-Petronas_Towers_2019.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Kuala_Lumpur_skyline_2018.jpg/900px-Kuala_Lumpur_skyline_2018.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Batu_Caves_2017.jpg/900px-Batu_Caves_2017.jpg\"
-      ],
-      \"巴黎\": [
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Eiffel_Tower_2019.jpg/900px-Eiffel_Tower_2019.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Louvre_Museum_2018.jpg/900px-Louvre_Museum_2018.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Sacre-Coeur_2017.jpg/900px-Sacre-Coeur_2017.jpg\"
-      ],
-      \"伦敦\": [
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Big_Ben_2019.jpg/900px-Big_Ben_2019.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/London_Eye_2018.jpg/900px-London_Eye_2018.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Tower_Bridge_2017.jpg/900px-Tower_Bridge_2017.jpg\"
-      ],
-      \"纽约\": [
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Statue_of_Liberty_2019.jpg/900px-Statue_of_Liberty_2019.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/New_York_City_skyline_2018.jpg/900px-New_York_City_skyline_2018.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Times_Square_2017.jpg/900px-Times_Square_2017.jpg\"
-      ],
-      \"悉尼\": [
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Sydney_Opera_House_2019.jpg/900px-Sydney_Opera_House_2019.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Sydney_Harbour_Bridge_2018.jpg/900px-Sydney_Harbour_Bridge_2018.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Bondi_Beach_2017.jpg/900px-Bondi_Beach_2017.jpg\"
-      ],
-      \"大阪\": [
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Osaka_Castle_2019.jpg/900px-Osaka_Castle_2019.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Dotonbori_2018.jpg/900px-Dotonbori_2018.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Umeda_Sky_Building_2017.jpg/900px-Umeda_Sky_Building_2017.jpg\"
-      ],
-      \"台北\": [
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Taipei_101_2019.jpg/900px-Taipei_101_2019.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Chiang_Kai-shek_Memorial_Hall_2018.jpg/900px-Chiang_Kai-shek_Memorial_Hall_2018.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Shilin_Night_Market_2017.jpg/900px-Shilin_Night_Market_2017.jpg\"
-      ],
-      \"澳门\": [
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Macau_skyline_2018.jpg/900px-Macau_skyline_2018.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Ruins_of_St_Paul_2019.jpg/900px-Ruins_of_St_Paul_2019.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Macau_Tower_2017.jpg/900px-Macau_Tower_2017.jpg\"
-      ],
-      \"清迈\": [
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Wat_Phra_That_Doi_Suthep_2019.jpg/900px-Wat_Phra_That_Doi_Suthep_2019.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Chiang_Mai_old_city_2018.jpg/900px-Chiang_Mai_old_city_2018.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Elephant_Nature_Park_Chiang_Mai_2017.jpg/900px-Elephant_Nature_Park_Chiang_Mai_2017.jpg\"
-      ],
-      \"成都\": [
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Chengdu_panda_2019.jpg/900px-Chengdu_panda_2019.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Jinli_Ancient_Street_2018.jpg/900px-Jinli_Ancient_Street_2018.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Mount_Qingcheng_2017.jpg/900px-Mount_Qingcheng_2017.jpg\"
-      ],
-      \"厦门\": [
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Gulangyu_Island_2019.jpg/900px-Gulangyu_Island_2019.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Xiamen_University_2018.jpg/900px-Xiamen_University_2018.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Nanputuo_Temple_2017.jpg/900px-Nanputuo_Temple_2017.jpg\"
-      ],
-      \"昆明\": [
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Stone_Forest_Kunming_2019.jpg/900px-Stone_Forest_Kunming_2019.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Dianchi_Lake_2018.jpg/900px-Dianchi_Lake_2018.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Yuantong_Temple_2017.jpg/900px-Yuantong_Temple_2017.jpg\"
-      ],
-      \"广州\": [
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Canton_Tower_2019.jpg/900px-Canton_Tower_2019.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Shamian_Island_2018.jpg/900px-Shamian_Island_2018.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Chen_Clan_Academy_2017.jpg/900px-Chen_Clan_Academy_2017.jpg\"
-      ],
-      \"深圳\": [
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Shenzhen_skyline_2019.jpg/900px-Shenzhen_skyline_2019.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/OCT_Loft_Shenzhen_2018.jpg/900px-OCT_Loft_Shenzhen_2018.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Dameisha_Beach_2017.jpg/900px-Dameisha_Beach_2017.jpg\"
-      ],
-      \"三亚\": [
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Sanya_Bay_2019.jpg/900px-Sanya_Bay_2019.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Yalong_Bay_2018.jpg/900px-Yalong_Bay_2018.jpg\",
-        \"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Tianya_Haijiao_2017.jpg/900px-Tianya_Haijiao_2017.jpg\"
-      ]
-    };
-
-    // ━━ Wikipedia 接口拉取城市图片 ━━
-    async function fetchWikipediaCityImage(city) {
-      try {
-        const cnUrl = `https://zh.wikipedia.org/api/rest_v1/page/summary/` + encodeURIComponent(city);
-        let resp = await fetch(cnUrl);
-        if (!resp.ok) {
-          const enUrl = `https://en.wikipedia.org/api/rest_v1/page/summary/` + encodeURIComponent(city);
-          resp = await fetch(enUrl);
-        }
-        if (!resp.ok) return null;
-        const data = await resp.json();
-        if (data.thumbnail?.source) return data.thumbnail.source;
-        return null;
-      } catch {
-        return null;
-      }
-    }
-
-    function getPicsumFallback(city) {
-      const seed = encodeURIComponent(city + \"_landmark\");
-      return \"https://picsum.photos/seed/\" + seed + \"/900/560\";
-    }
-
-    // ━━ Loopy 本地图片引用 ━━
-    const LOOPY_SRC = \"loopy.jpg\";
-
-    // ━━ 城市数据 ━━
-    function cityData(city) {
-      const map = {
-        \"东京\": { country: \"JP\", desc: \"古老与现代交错的都市，樱花、美食与霓虹交织成独特的风景线。\", chips: [\"浅草寺\", \"涩谷\", \"东京塔\"] },
-        \"上海\": { country: \"CN\", desc: \"外滩的万国建筑群与陆家嘴的摩天大楼交相辉映，百年风华尽在浦江两岸。\", chips: [\"外滩\", \"豫园\", \"东方明珠\"] },
-        \"北京\": { country: \"CN\", desc: \"千年古都，紫禁城的红墙金瓦与长城的巍峨壮丽，诉说着华夏文明的辉煌。\", chips: [\"故宫\", \"长城\", \"天坛\"] },
-        \"香港\": { country: \"HK\", desc: \"维港夜色璀璨夺目，太平山顶俯瞰都市繁华，东西文化在此完美交融。\", chips: [\"维多利亚港\", \"太平山\", \"铜锣湾\"] },
-        \"首尔\": { country: \"KR\", desc: \"韩国首都，景福宫的古典美与明洞的时尚潮流并存，K-pop的起源地。\", chips: [\"景福宫\", \"N首尔塔\", \"北村韩屋\"] },
-        \"曼谷\": { country: \"TH\", desc: \"泰国的微笑之都，金碧辉煌的大皇宫与热闹的水上市场展现独特魅力。\", chips: [\"大皇宫\", \"郑王庙\", \"水上市场\"] },
-        \"新加坡\": { country: \"SG\", desc: \"花园城市国家，滨海湾的超级树与鱼尾狮是这座现代都市的名片。\", chips: [\"滨海湾\", \"鱼尾狮\", \"圣淘沙\"] },
-        \"普吉岛\": { country: \"TH\", desc: \"安达曼海上的明珠，碧海蓝天与洁白沙滩是度假的天堂。\", chips: [\"皮皮岛\", \"芭东海滩\", \"大佛\"] },
-        \"吉隆坡\": { country: \"MY\", desc: \"马来西亚首都，双子塔高耸入云，多元文化在此和谐共生。\", chips: [\"双子塔\", \"茨厂街\", \"黑风洞\"] },
-        \"巴黎\": { country: \"FR\", desc: \"浪漫之都，埃菲尔铁塔下的塞纳河畔，艺术与时尚的气息流淌在每一条街道。\", chips: [\"埃菲尔铁塔\", \"卢浮宫\", \"塞纳河\"] },
-        \"伦敦\": { country: \"GB\", desc: \"英伦风情的缩影，大本钟的钟声与泰晤士河的波光诉说着日不落帝国的往事。\", chips: [\"大本钟\", \"伦敦眼\", \"塔桥\"] },
-        \"纽约\": { country: \"US\", desc: \"世界之都，自由女神像矗立在海港，时代广场的霓虹永不熄灭。\", chips: [\"自由女神\", \"时代广场\", \"中央公园\"] },
-        \"悉尼\": { country: \"AU\", desc: \"澳大利亚的海港城市，悉尼歌剧院如贝壳般绽放在碧蓝的海湾边。\", chips: [\"歌剧院\", \"海港大桥\", \"邦迪海滩\"] },
-        \"大阪\": { country: \"JP\", desc: \"日本的厨房，道顿堀的美食与大阪城的古韵让人流连忘返。\", chips: [\"大阪城\", \"道顿堀\", \"梅田\"] },
-        \"台北\": { country: \"TW\", desc: \"宝岛台湾的中心，101大楼的灯火与士林夜市的美味是城市的名片。\", chips: [\"台北101\", \"中正纪念堂\", \"士林夜市\"] },
-        \"澳门\": { country: \"MO\", desc: \"东方蒙特卡洛，大三巴牌坊见证着四百年的中西文化交融。\", chips: [\"大三巴\", \"澳门塔\", \"官也街\"] },
-        \"清迈\": { country: \"TH\", desc: \"泰北玫瑰，古城寺庙的宁静与大象营的欢快构成独特的泰北风情。\", chips: [\"素贴山\", \"古城\", \"大象营\"] },
-        \"成都\": { country: \"CN\", desc: \"天府之国，大熊猫的故乡，火锅的香气飘荡在宽窄巷子之间。\", chips: [\"大熊猫\", \"宽窄巷子\", \"青城山\"] },
-        \"厦门\": { country: \"CN\", desc: \"海上花园，鼓浪屿的万国建筑与环岛路的海风让人心旷神怡。\", chips: [\"鼓浪屿\", \"厦门大学\", \"南普陀\"] },
-        \"昆明\": { country: \"CN\", desc: \"春城花都，石林奇观与滇池碧波构成云南最美的画卷。\", chips: [\"石林\", \"滇池\", \"圆通寺\"] },
-        \"广州\": { country: \"CN\", desc: \"千年商都，广州塔的纤腰与沙面的欧陆风情展现岭南魅力。\", chips: [\"广州塔\", \"沙面\", \"陈家祠\"] },
-        \"深圳\": { country: \"CN\", desc: \"改革窗口，从渔村到国际都市的奇迹，年轻与创新是它的底色。\", chips: [\"深圳湾\", \"华侨城\", \"大梅沙\"] },
-        \"三亚\": { country: \"CN\", desc: \"东方夏威夷，椰风海韵中的热带天堂，潜水冲浪的理想之地。\", chips: [\"亚龙湾\", \"天涯海角\", \"蜈支洲岛\"] }
-      };
-      return map[city] || { country: \"JP\", desc: \"一座充满魅力的城市，等待你去探索它的独特风景。\", chips: [\"城市地标\", \"当地美食\", \"人文风情\"] };
-    }
-
-    function isInternationalRoute() {
-      const info = cityData(state.to);
-      return info.country !== \"CN\" && info.country !== \"HK\" && info.country !== \"TW\" && info.country !== \"MO\";
-    }
-
-    // ━━ 随机生成工具 ━━
-    function randomBetween(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-    function pad(n) {
-      return String(n).padStart(2, \"0\");
-    }
-    function todayPlus(n) {
-      const d = new Date();
-      d.setDate(d.getDate() + n);
-      return d.toISOString().slice(0, 10);
-    }
-
-    // ━━ 航空公司列表 ━━
-    const airlines = [
-      { code: \"CA\", name: \"中国国航\", region: \"中国\", lowCost: false, color: \"#E60012\" },
-      { code: \"MU\", name: \"东方航空\", region: \"中国\", lowCost: false, color: \"#0A5C9E\" },
-      { code: \"CZ\", name: \"南方航空\", region: \"中国\", lowCost: false, color: \"#008080\" },
-      { code: \"HU\", name: \"海南航空\", region: \"中国\", lowCost: false, color: \"#E45B5F\" },
-      { code: \"3U\", name: \"四川航空\", region: \"中国\", lowCost: false, color: \"#0C9B3E\" },
-      { code: \"ZH\", name: \"深圳航空\", region: \"中国\", lowCost: false, color: \"#003366\" },
-      { code: \"MF\", name: \"厦门航空\", region: \"中国\", lowCost: false, color: \"#0072BC\" },
-      { code: \"SC\", name: \"山东航空\", region: \"中国\", lowCost: false, color: \"#007850\" },
-      { code: \"9C\", name: \"春秋航空\", region: \"中国\", lowCost: true, color: \"#00A95C\" },
-      { code: \"HO\", name: \"吉祥航空\", region: \"中国\", lowCost: false, color: \"#E5004B\" },
-      { code: \"GS\", name: \"天津航空\", region: \"中国\", lowCost: true, color: \"#D1222B\" },
-      { code: \"GJ\", name: \"长龙航空\", region: \"中国\", lowCost: true, color: \"#004B87\" },
-      { code: \"AQ\", name: \"九元航空\", region: \"中国\", lowCost: true, color: \"#F36E21\" },
-      { code: \"EU\", name: \"成都航空\", region: \"中国\", lowCost: true, color: \"#007C5E\" },
-      { code: \"JL\", name: \"日本航空\", region: \"日本\", lowCost: false, color: \"#D42028\" },
-      { code: \"NH\", name: \"全日空\", region: \"日本\", lowCost: false, color: \"#005BAC\" },
-      { code: \"KE\", name: \"大韩航空\", region: \"韩国\", lowCost: false, color: \"#00488B\" },
-      { code: \"OZ\", name: \"韩亚航空\", region: \"韩国\", lowCost: false, color: \"#E55B00\" },
-      { code: \"CX\", name: \"国泰航空\", region: \"香港\", lowCost: false, color: \"#006747\" },
-      { code: \"SQ\", name: \"新加坡航空\", region: \"新加坡\", lowCost: false, color: \"#F0AB00\" },
-      { code: \"TG\", name: \"泰航\", region: \"泰国\", lowCost: false, color: \"#24367E\" },
-      { code: \"MH\", name: \"马来西亚航空\", region: \"马来西亚\", lowCost: false, color: \"#0072C6\" },
-      { code: \"BA\", name: \"英国航空\", region: \"英国\", lowCost: false, color: \"#003399\" },
-      { code: \"AF\", name: \"法国航空\", region: \"法国\", lowCost: false, color: \"#002157\" },
-      { code: \"EK\", name: \"阿联酋航空\", region: \"阿联酋\", lowCost: false, color: \"#D91C21\" },
-      { code: \"QR\", name: \"卡塔尔航空\", region: \"卡塔尔\", lowCost: false, color: \"#8A1538\" },
-      { code: \"TK\", name: \"土耳其航空\", region: \"土耳其\", lowCost: false, color: \"#E30A17\" },
-      { code: \"GA\", name: \"印尼鹰航\", region: \"印尼\", lowCost: false, color: \"#004C97\" },
-      { code: \"VJ\", name: \"越捷航空\", region: \"越南\", lowCost: true, color: \"#E31C24\" },
-      { code: \"FD\", name: \"亚洲航空\", region: \"泰国/马来西亚\", lowCost: true, color: \"#E4002B\" },
-      { code: \"TR\", name: \"酷航\", region: \"新加坡\", lowCost: true, color: \"#FDE100\" },
-      { code: \"MM\", name: \"春秋航空日本\", region: \"日本\", lowCost: true, color: \"#0067C0\" },
-      { code: \"5J\", name: \"宿务航空\", region: \"菲律宾\", lowCost: true, color: \"#0066B3\" },
-      { code: \"BR\", name: \"长荣航空\", region: \"台湾\", lowCost: false, color: \"#006D32\" },
-      { code: \"CI\", name: \"中华航空\", region: \"台湾\", lowCost: false, color: \"#003366\" }
-    ];
-
-    // ━━ 状态管理 ━━
-    const state = {
-      from: \"上海\",
-      to: \"东京\",
-      date: todayPlus(1),
-      maxPrice: 650,
-      interval: 30,
-      cabin: \"经济舱\",
-      rows: [],
-      filters: new Set(),
-      query: \"\",
-      timer: null,
-      destinationIndex: 0
-    };
-
-    // ━━ DOM 引用 ━━
-    const el = {};
-    document.querySelectorAll(\"[id]\").forEach(node => el[node.id] = node);
-
-    // ━━ Loopy 固定 URL 背景装饰 ━━
-    function initLoopyFloating() {
-      const gallery = el.loopyFloating;
-      for (let i = 0; i < 6; i++) {
-        const img = document.createElement(\"img\");
-        img.src = LOOPY_SRC;
-        img.alt = \"\";
-        img.className = \"loopy-dot\";
-        gallery.appendChild(img);
-      }
-    }
-
-    // ━━ 目的地图片加载 ━━
-    let currentCityImages = [];
-    let cityImageIndex = 0;
-
-    async function loadDestinationImages(city) {
-      const data = DESTINATION_IMAGES[city];
-      if (data && data.length > 0) {
-        currentCityImages = [...data];
-      } else {
-        const wikiUrl = await fetchWikipediaCityImage(city);
-        if (wikiUrl) {
-          currentCityImages = [wikiUrl];
-        } else {
-          currentCityImages = [getPicsumFallback(city)];
-        }
-      }
-      cityImageIndex = 0;
-      displayDestinationImage();
-    }
-
-    function displayDestinationImage() {
-      if (currentCityImages.length === 0) {
-        fetchWikipediaCityImage(state.to).then(url => {
-          if (url) {
-            currentCityImages = [url];
-            cityImageIndex = 0;
-            setDestinationImage(currentCityImages[0]);
-          }
-        });
-        return;
-      }
-      const idx = cityImageIndex % currentCityImages.length;
-      setDestinationImage(currentCityImages[idx]);
-      el.imageCounter.textContent = `${idx + 1}/${currentCityImages.length}`;
-    }
-
-    function setDestinationImage(url) {
-      el.destinationPhoto.classList.add(\"loading\");
-      el.destinationPhoto.onload = () => {
-        el.destinationPhoto.classList.remove(\"loading\");
-      };
-      el.destinationPhoto.onerror = () => {
-        cityImageIndex++;
-        displayDestinationImage();
-      };
-      el.destinationPhoto.src = url;
-    }
-
-    function nextDestinationImage() {
-      if (currentCityImages.length === 0) return;
-      cityImageIndex = (cityImageIndex + 1) % currentCityImages.length;
-      displayDestinationImage();
-    }
-
-    function prevDestinationImage() {
-      if (currentCityImages.length === 0) return;
-      cityImageIndex = (cityImageIndex - 1 + currentCityImages.length) % currentCityImages.length;
-      displayDestinationImage();
-    }
-
-    function refreshDestinationImage() {
-      cityImageIndex = (cityImageIndex + 1) % currentCityImages.length;
-      displayDestinationImage();
-    }
-
-    // ━━ 渲染目的地 ━━
-    function renderDestination() {
-      const city = state.to;
-      const info = cityData(city);
-      el.destinationBadge.innerHTML = `<img src=\"${LOOPY_SRC}\" class=\"mini-loopy\" alt=\"\" /> ${city} · 真实风景照`;
-      el.destinationTitle.textContent = `${city} - 当地特色风光`;
-      el.destinationDesc.textContent = info.desc;
-      el.destinationChips.innerHTML = info.chips.map(item => `<span class=\"destination-chip\">${item}</span>`).join(\"\");
-      el.aiPrompt.textContent = `Loopy 为你找到 ${currentCityImages.length} 张 ${city} 的真实风景照`;
-      el.aiStatus.textContent = currentCityImages.length > 0 ? `${currentCityImages.length} 张照片` : \"加载中...\";
-    }
-
-    function drawDestinationWithAi() {
-      state.to = el.toCity.value.trim() || state.to;
-      el.refreshPhotoBtn.disabled = true;
-      el.aiStatus.textContent = \"Loopy 正在切换目的地照片...\";
-      cityImageIndex = (cityImageIndex + 2) % Math.max(1, currentCityImages.length);
-      setTimeout(() => {
-        displayDestinationImage();
-        renderDestination();
-        el.aiStatus.textContent = `Loopy 已更新 ${state.to} 的真实风景照`;
-        el.refreshPhotoBtn.disabled = false;
-      }, 400);
-    }
-
-    // ━━ 航班数据生成 ━━
-    function airportCodes(city) {
-      const map = {
-        \"上海\": [\"PVG\", \"SHA\"], \"北京\": [\"PEK\", \"PKX\"], \"广州\": [\"CAN\"],
-        \"深圳\": [\"SZX\"], \"成都\": [\"CTU\", \"TFU\"], \"杭州\": [\"HGH\"],
-        \"南京\": [\"NKG\"], \"重庆\": [\"CKG\"], \"武汉\": [\"WUH\"], \"西安\": [\"XIY\"],
-        \"厦门\": [\"XMN\"], \"昆明\": [\"KMG\"], \"青岛\": [\"TAO\"], \"长沙\": [\"CSX\"],
-        \"三亚\": [\"SYX\"], \"大连\": [\"DLC\"], \"东京\": [\"NRT\", \"HND\"],
-        \"大阪\": [\"KIX\", \"ITM\"], \"首尔\": [\"ICN\", \"GMP\"], \"香港\": [\"HKG\"],
-        \"曼谷\": [\"BKK\", \"DMK\"], \"新加坡\": [\"SIN\"], \"普吉岛\": [\"HKT\"],
-        \"吉隆坡\": [\"KUL\"], \"伦敦\": [\"LHR\", \"LGW\"], \"巴黎\": [\"CDG\", \"ORY\"],
-        \"纽约\": [\"JFK\", \"EWR\", \"LGA\"], \"悉尼\": [\"SYD\"], \"洛杉矶\": [\"LAX\"],
-        \"台北\": [\"TPE\", \"TSA\"], \"澳门\": [\"MFM\"], \"清迈\": [\"CNX\"]
-      };
-      return map[city] || [city.slice(0, 3).toUpperCase()];
-    }
-
-    function makeFlightNumber(prefix) {
-      return prefix + randomBetween(1001, 9999);
-    }
-
-    function routeTitle() {
-      return `${state.from} → ${state.to}`;
-    }
-
-    function airlineLogo(airline) {
-      return `<div class=\"airline-logo\" style=\"background:${airline.color}\"><span>${airline.code.slice(0, 2)}</span></div>`;
-    }
-
-    function generateRows() {
-      const models = [\"A320\", \"A321neo\", \"A330\", \"A350\", \"B737-800\", \"B737 MAX 8\", \"B777-300ER\", \"B787-9\", \"C919\"];
-      const international = isInternationalRoute();
-      const longHaul = international && ![\"HK\", \"TW\", \"JP\", \"KR\", \"SG\", \"TH\", \"MY\", \"PH\", \"VN\"].includes(cityData(state.to).country);
-      const base = state.cabin === \"商务舱\"
-        ? (longHaul ? 8200 : international ? 3600 : 1780)
-        : state.cabin === \"超级经济舱\"
-          ? (longHaul ? 4200 : international ? 1500 : 920)
-          : (longHaul ? 2600 : international ? 760 : 430);
-      const cityFactor = Math.min(longHaul ? 3200 : international ? 1450 : 460, (state.from.length + state.to.length) * (international ? 92 : 32) + randomBetween(30, international ? 420 : 120));
-      state.rows = airlines.map((airline, index) => {
-        const hour = 6 + (index % 13);
-        const minute = [0, 10, 20, 30, 45, 55][index % 6];
-        const duration = longHaul ? randomBetween(620, 880) : international ? randomBetween(150, 420) : randomBetween(120, 190);
-        const departCodes = airportCodes(state.from);
-        const arriveCodes = airportCodes(state.to);
-        const departCode = departCodes[index % departCodes.length];
-        const arriveCode = arriveCodes[index % arriveCodes.length];
-        const lowCostDiscount = airline.lowCost ? randomBetween(80, international ? 380 : 170) : 0;
-        const price = Math.max(260, base + cityFactor + randomBetween(-160, international ? 680 : 280) - lowCostDiscount);
-        const change = randomBetween(-90, 110);
-        const stops = international ? (Math.random() > (longHaul ? .44 : .72) ? 1 : 0) : (Math.random() > .78 ? 1 : 0);
-        const baggage = airline.lowCost ? Math.random() > .58 : Math.random() > .18;
-        const refundable = airline.lowCost ? Math.random() > .72 : Math.random() > .48;
-        return {
-          ...airline,
-          flightNo: makeFlightNumber(airline.code),
-          depart: `${pad(hour)}:${pad(minute)}`,
-          arrive: `${pad((hour + Math.floor(duration / 60)) % 24)}:${pad((minute + duration) % 60)}`,
-          route: `${departCode} → ${arriveCode}`,
-          model: models[index % models.length],
-          cabin: state.cabin,
-          price,
-          change,
-          stops,
-          baggage,
-          refundable,
-          status: price <= state.maxPrice ? \"已触发提醒\" : stops ? \"需中转\" : airline.lowCost ? \"廉航可订\" : \"可订\"
-        };
-      }).sort((a, b) => a.price - b.price);
-    }
-
-    function filteredRows() {
-      return state.rows.filter(row => {
-        const text = `${row.name} ${row.code} ${row.region} ${row.lowCost ? \"廉航\" : \"\"} ${row.flightNo} ${row.route} ${row.model}`.toLowerCase();
-        if (state.query && !text.includes(state.query.toLowerCase())) return false;
-        if (state.filters.has(\"direct\") && row.stops > 0) return false;
-        if (state.filters.has(\"baggage\") && !row.baggage) return false;
-        if (state.filters.has(\"refundable\") && !row.refundable) return false;
-        if (state.filters.has(\"alert\") && row.price > state.maxPrice) return false;
-        return true;
-      });
-    }
-
-    function renderMetrics(rows) {
-      const all = state.rows;
-      const min = all[0];
-      const avg = Math.round(all.reduce((sum, row) => sum + row.price, 0) / all.length);
-      const alerts = all.filter(row => row.price <= state.maxPrice).length;
-      el.minPrice.textContent = min ? `¥${min.price}` : \"¥--\";
-      el.minCarrier.textContent = min ? `${min.name} ${min.flightNo}` : \"--\";
-      el.avgPrice.textContent = `¥${avg || \"--\"}`;
-      el.alertCount.textContent = alerts;
-      el.flightCount.textContent = rows.length;
-      el.airlineCount.textContent = `${airlines.length} 家航司`;
-    }
-
-    function renderChart() {
-      const lowest = state.rows[0]?.price || 500;
-      const data = Array.from({ length: 7 }, (_, i) => ({
-        label: `${i + 1}天后`,
-        price: Math.max(220, lowest + randomBetween(-110, 180))
-      }));
-      const max = Math.max(...data.map(item => item.price));
-      const min = Math.min(...data.map(item => item.price));
-      el.chart.innerHTML = data.map(item => {
-        const height = 24 + ((item.price - min) / Math.max(1, max - min)) * 72;
-        return `<div class=\"bar\"><div class=\"bar-fill\" style=\"height:${height}%\" data-price=\"¥${item.price}\"></div><span>${item.label}</span></div>`;
-      }).join(\"\");
-    }
-
-    function renderAirlines() {
-      const cheapestByCarrier = airlines.map(airline => {
-        const row = state.rows.find(item => item.code === airline.code);
-        return { ...airline, price: row?.price || randomBetween(480, 980), status: row?.status || \"待同步\" };
-      }).sort((a, b) => a.price - b.price);
-      el.airlineList.innerHTML = cheapestByCarrier.map(item => `
-        <div class=\"airline\">
-          ${airlineLogo(item)}
+      <div class="panel">
+        <div class="content-head">
           <div>
-            <strong>${item.name}</strong>
-            <small>${item.region}${item.lowCost ? \" · 廉航\" : \"\"} · 最低¥${item.price}</small>
+            <h2 id="routeTitle">所有航班</h2>
+            <p id="routeSub">Loopy 正在监控机票价格</p>
           </div>
-          <span class=\"tag ${item.lowCost ? \"low-cost\" : \"\"}\">${item.lowCost ? \"廉航\" : item.status}</span>
+          <div class="head-actions">
+            <button class="btn secondary" id="exportBtn">导出 CSV</button>
+            <button class="btn secondary" id="apiBtn">API</button>
+          </div>
         </div>
-      `).join(\"\");
-    }
+        <div class="metrics">
+          <div class="metric">
+            <span>最低价</span>
+            <strong id="minPrice">&#165;--</strong>
+            <small id="minCarrier">--</small>
+          </div>
+          <div class="metric">
+            <span>均价</span>
+            <strong id="avgPrice">&#165;--</strong>
+            <small>实时计算</small>
+          </div>
+          <div class="metric">
+            <span>低价提醒</span>
+            <strong id="alertCount">0</strong>
+            <small>低于提醒价</small>
+          </div>
+          <div class="metric">
+            <span>航班数</span>
+            <strong id="flightCount">0</strong>
+            <small id="airlineCount">0 家航司</small>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-head"><h3>&#9829; 价格趋势</h3><span class="muted">近7天预测</span></div>
+            <div class="chart-wrap"><div class="chart" id="chart"></div></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>&#9829; 航司最低价</h3><span class="muted">按价格排序</span></div>
+            <div class="airline-list" id="airlineList"></div>
+          </div>
+        </div>
+        <div class="table-card">
+          <div class="table-toolbar">
+            <input id="tableSearch" placeholder="搜索航班号、航司、机型..." />
+            <span class="muted" id="resultText">0 条结果</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>航司</th><th>航班</th><th>时间</th><th>机场</th><th>机型</th><th>舱位</th><th>价格</th><th>变化</th><th>状态</th></tr></thead>
+              <tbody id="flightRows"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-    function renderTable(rows) {
-      el.resultText.textContent = `${rows.length} 条结果`;
-      if (!rows.length) {
-        el.flightRows.innerHTML = `<tr><td colspan=\"9\"><div class=\"empty\">Loopy 没有找到符合条件的航班，调整筛选后再试哦</div></td></tr>`;
-        return;
-      }
-      el.flightRows.innerHTML = rows.map(row => {
-        const changeClass = row.change > 0 ? \"up\" : \"down\";
-        const changeText = row.change > 0 ? `+¥${row.change}` : `-¥${Math.abs(row.change)}`;
-        const statusClass = row.price <= state.maxPrice ? \"warn\" : \"\";
-        return `
-          <tr>
-            <td>
-              <div class=\"carrier-cell\">
-                ${airlineLogo(row)}
-                <div><strong>${row.name}</strong><br><span class=\"muted\">${row.code} · ${row.region}${row.lowCost ? \" · 廉航\" : \"\"}</span></div>
-              </div>
-            </td>
-            <td>${row.flightNo}</td>
-            <td>${row.depart} - ${row.arrive}</td>
-            <td>${row.route}</td>
-            <td>${row.model}</td>
-            <td>${row.cabin}</td>
-            <td class=\"price\">¥${row.price}</td>
-            <td class=\"change ${changeClass}\">${changeText}</td>
-            <td class=\"${statusClass}\">${row.status}</td>
-          </tr>
-        `;
-      }).join(\"\");
-    }
+<div class="loopy-popup" id="loopyPopup" title="我是 Loopy!">
+  <img src="loopy.jpg" alt="Loopy" />
+  <span class="popup-bubble">&#9829; 嗨！</span>
+</div>
 
-    function renderAll() {
-      const rows = filteredRows();
-      el.routeTitle.textContent = routeTitle();
-      el.routeSub.textContent = `Loopy 正在监控 ${state.date} 的${isInternationalRoute() ? \"国际\" : \"国内\"}${state.cabin}机票价格，价格为演示数据。`;
-      el.lastUpdated.textContent = new Date().toLocaleTimeString(\"zh-CN\", { hour12: false });
-      renderDestination();
-      renderMetrics(rows);
-      renderChart();
-      renderAirlines();
-      renderTable(rows);
-      const alertRows = state.rows.filter(row => row.price <= state.maxPrice);
-      if (alertRows.length) {
-        showToast(`${alertRows.length} 个航班低于提醒价 ¥${state.maxPrice}，最低为 ${alertRows[0].name} ¥${alertRows[0].price}`);
-      }
-    }
+<div class="toast" id="toast">
+  <img src="loopy.jpg" alt="" />
+  <span id="toastMessage"></span>
+</div>
 
-    function startTimer() {
-      clearInterval(state.timer);
-      state.timer = setInterval(() => {
-        generateRows();
-        renderAll();
-      }, state.interval * 1000);
-      el.syncStatus.textContent = `每 ${state.interval} 秒刷新`;
-    }
+<div class="modal-backdrop" id="apiModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>&#9829; 三方接口配置</h2>
+      <button class="btn secondary" id="closeApi" style="height:32px;padding:0 11px;font-size:12px">关闭</button>
+    </div>
+    <div class="modal-body">
+      <div class="field"><label>API Endpoint</label><input id="apiUrl" placeholder="https://api.example.com/flights" /></div>
+      <div class="field"><label>Token / API Key</label><input id="apiToken" type="password" placeholder="sk-..." /></div>
+      <div class="field"><label>字段映射 (JSON)</label><textarea id="apiMapping" class="api-box" placeholder='{"price":"price","airline":"carrier"}'></textarea></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn secondary" id="resetApi" style="font-size:12px;height:32px">重置</button>
+      <button class="btn" id="saveApi" style="font-size:12px;height:32px">保存配置</button>
+    </div>
+  </div>
+</div>
 
-    function showToast(message) {
-      el.toastMessage.textContent = message;
-      el.toast.classList.add(\"show\");
-      clearTimeout(showToast.timer);
-      showToast.timer = setTimeout(() => el.toast.classList.remove(\"show\"), 3200);
-    }
+<script>
+(function(){
+setTimeout(function(){
+var e={};document.querySelectorAll("[id]").forEach(function(n){e[n.id]=n;});
 
-    function exportCsv() {
-      const headers = [\"航司\", \"代码\", \"类型\", \"地区\", \"航班\", \"出发\", \"到达\", \"机场\", \"机型\", \"舱位\", \"价格\", \"变化\", \"状态\"];
-      const rows = filteredRows().map(row => [
-        row.name, row.code, row.lowCost ? \"廉价航空\" : \"全服务航空\", row.region, row.flightNo, row.depart, row.arrive, row.route, row.model, row.cabin, row.price, row.change, row.status
-      ]);
-      const csv = [headers, ...rows].map(cols => cols.map(col => `\"${String(col).replaceAll('\"', '\"\"')}\"`).join(\",\")).join(\"\
-\");
-      const blob = new Blob([\"\\ufeff\" + csv], { type: \"text/csv;charset=utf-8\" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement(\"a\");
-      link.href = url;
-      link.download = `机票监控_${state.from}-${state.to}_${state.date}.csv`;
-      link.click();
-      URL.revokeObjectURL(url);
-      showToast(\"已导出当前筛选结果\");
-    }
+var D={"东京":["https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Tokyo_SkyTree_2017.jpg/900px-Tokyo_SkyTree_2017.jpg","https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Tokyo_Tower_2020.jpg/900px-Tokyo_Tower_2020.jpg"],"上海":["https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Shanghai_skyline_from_the_Bund_2014.jpg/900px-Shanghai_skyline_from_the_Bund_2014.jpg","https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Pudong_skyline_Shanghai_2015.jpg/900px-Pudong_skyline_Shanghai_2015.jpg"],"北京":["https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Forbidden_City_2019.jpg/900px-Forbidden_City_2019.jpg","https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Great_Wall_of_China_2018.jpg/900px-Great_Wall_of_China_2018.jpg"],"香港":["https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Hong_Kong_Night_Skyline_2018.jpg/900px-Hong_Kong_Night_Skyline_2018.jpg","https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Victoria_Harbour_2019.jpg/900px-Victoria_Harbour_2019.jpg"],"首尔":["https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Gyeongbokgung_Palace_2016.jpg/900px-Gyeongbokgung_Palace_2016.jpg","https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/N_Seoul_Tower_2019.jpg/900px-N_Seoul_Tower_2019.jpg"],"曼谷":["https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Wat_Phra_Kaew_2015.jpg/900px-Wat_Phra_Kaew_2015.jpg","https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Wat_Arun_2019.jpg/900px-Wat_Arun_2019.jpg"]};
 
-    // ━━ 事件绑定 ━━
-    document.getElementById(\"searchForm\").addEventListener(\"submit\", event => {
-      event.preventDefault();
-      state.from = el.fromCity.value.trim() || \"上海\";
-      state.to = el.toCity.value.trim() || \"东京\";
-      state.date = el.departDate.value || todayPlus(1);
-      state.maxPrice = Number(el.maxPrice.value || 650);
-      state.interval = Number(el.interval.value || 30);
-      generateRows();
-      loadDestinationImages(state.to);
-      renderAll();
-      startTimer();
-      showToast(`${state.from} 到 ${state.to} 的监控已更新`);
-    });
+var A=[{c:"CA",n:"中国国航",r:"中国",l:false,o:"#E60012"},{c:"MU",n:"东方航空",r:"中国",l:false,o:"#0A5C9E"},{c:"CZ",n:"南方航空",r:"中国",l:false,o:"#008080"},{c:"HU",n:"海南航空",r:"中国",l:false,o:"#E45B5F"},{c:"9C",n:"春秋航空",r:"中国",l:true,o:"#00A95C"},{c:"JL",n:"日本航空",r:"日本",l:false,o:"#D42028"},{c:"NH",n:"全日空",r:"日本",l:false,o:"#005BAC"},{c:"KE",n:"大韩航空",r:"韩国",l:false,o:"#00488B"},{c:"SQ",n:"新加坡航空",r:"新加坡",l:false,o:"#F0AB00"},{c:"CX",n:"国泰航空",r:"香港",l:false,o:"#006747"},{c:"EK",n:"阿联酋航空",r:"阿联酋",l:false,o:"#D91C21"},{c:"BA",n:"英国航空",r:"英国",l:false,o:"#003399"}];
 
-    document.getElementById(\"swapBtn\").addEventListener(\"click\", () => {
-      const from = el.fromCity.value;
-      el.fromCity.value = el.toCity.value;
-      el.toCity.value = from;
-      state.to = el.toCity.value.trim() || state.to;
-      loadDestinationImages(state.to);
-      renderDestination();
-    });
+var S={from:"上海",to:"东京",date:(function(){var d=new Date();d.setDate(d.getDate()+1);return d.toISOString().slice(0,10);})(),maxPrice:650,interval:30,cabin:"经济舱",rows:[],filters:{}};
+var I=[],p=0;
 
-    el.toCity.addEventListener(\"change\", () => {
-      state.to = el.toCity.value.trim() || state.to;
-      loadDestinationImages(state.to);
-      renderDestination();
-      el.aiStatus.textContent = `Loopy 已切换到 ${state.to} 的真实风景照`;
-    });
+function rc(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+function pd(n){return String(n).padStart(2,"0");}
 
-    el.refreshPhotoBtn.addEventListener(\"click\", drawDestinationWithAi);
-    el.refreshDestinationBtn.addEventListener(\"click\", refreshDestinationImage);
-    el.nextPhotoBtn.addEventListener(\"click\", nextDestinationImage);
-    el.prevPhotoBtn.addEventListener(\"click\", prevDestinationImage);
+function lc(c){if(D[c]){I=[].concat(D[c]);}else{I=["https://picsum.photos/seed/"+c+"/900/560"];}p=0;si();}
+function si(){if(!I.length)return;var i=p%I.length;e.destinationPhoto.classList.add("loading");e.destinationPhoto.onload=function(){e.destinationPhoto.classList.remove("loading");};e.destinationPhoto.onerror=function(){p++;si();};e.destinationPhoto.src=I[i];e.imageCounter.textContent=(i+1)+"/"+I.length;}
 
-    document.querySelectorAll(\".segmented button\").forEach(button => {
-      button.addEventListener(\"click\", () => {
-        document.querySelectorAll(\".segmented button\").forEach(item => item.classList.remove(\"active\"));
-        button.classList.add(\"active\");
-        state.cabin = button.dataset.cabin;
-      });
-    });
+function rd(){e.destinationBadge.innerHTML='<img src="loopy.jpg" class="mini-loopy" alt="" /> '+S.to+' . 真实风景照';e.destinationTitle.textContent=S.to+" - 当地特色风光";e.aiPrompt.textContent="Loopy 为你找到 "+I.length+" 张 "+S.to+" 的真实风景照";e.aiStatus.textContent=I.length+" 张照片";}
 
-    document.getElementById(\"filters\").addEventListener(\"change\", event => {
-      const value = event.target.value;
-      if (event.target.checked) state.filters.add(value);
-      else state.filters.delete(value);
-      renderAll();
-    });
+function gn(){var b=S.cabin==="商务舱"?1780:920;S.rows=A.map(function(a,i){var h=6+(i%13),m=[0,10,20,30,45,55][i%6];var pr=Math.max(260,b+rc(-160,280)-(a.l?rc(80,170):0));return{...a,fn:a.c+rc(1001,9999),dp:pd(h)+":"+pd(m),ar:pd((h+3)%24)+":"+pd(m),md:["A320","A321neo","A330","A350","B737-800","B787-9"][i%7],pr:pr,ch:rc(-90,110),st:pr<=S.maxPrice?"已触发提醒":"可订"};}).sort(function(a,b){return a.pr-b.pr;});}
 
-    el.tableSearch.addEventListener(\"input\", event => {
-      state.query = event.target.value;
-      renderTable(filteredRows());
-      renderMetrics(filteredRows());
-    });
+function fl(){return S.rows.filter(function(r){if(S.filters.direct&&r.st>0)return false;if(S.filters.alert&&r.pr>S.maxPrice)return false;return true;});}
 
-    document.getElementById(\"exportBtn\").addEventListener(\"click\", exportCsv);
-    document.getElementById(\"apiBtn\").addEventListener(\"click\", () => el.apiModal.classList.add(\"open\"));
-    document.getElementById(\"closeApi\").addEventListener(\"click\", () => el.apiModal.classList.remove(\"open\"));
-    document.getElementById(\"apiModal\").addEventListener(\"click\", event => {
-      if (event.target === el.apiModal) el.apiModal.classList.remove(\"open\");
-    });
-    document.getElementById(\"saveApi\").addEventListener(\"click\", () => {
-      const config = {
-        url: document.getElementById(\"apiUrl\").value,
-        token: document.getElementById(\"apiToken\").value,
-        mapping: document.getElementById(\"apiMapping\").value
-      };
-      localStorage.setItem(\"flightMonitorApiConfig\", JSON.stringify(config));
-      el.apiModal.classList.remove(\"open\");
-      showToast(\"接口配置已保存在本地浏览器\");
-    });
-    document.getElementById(\"resetApi\").addEventListener(\"click\", () => {
-      localStorage.removeItem(\"flightMonitorApiConfig\");
-      document.getElementById(\"apiUrl\").value = \"\";
-      document.getElementById(\"apiToken\").value = \"\";
-      showToast(\"接口配置已重置\");
-    });
+function ra(){var r=fl();e.routeTitle.textContent=S.from+" -> "+S.to;e.lastUpdated.textContent=new Date().toLocaleTimeString("zh-CN",{hour12:false});rd();var a=S.rows;e.minPrice.textContent=a[0]?"¥"+a[0].pr:"¥--";e.avgPrice.textContent="¥"+Math.round(a.reduce(function(s,x){return s+x.pr;},0)/a.length);e.alertCount.textContent=a.filter(function(x){return x.pr<=S.maxPrice;}).length;e.flightCount.textContent=r.length;e.airlineList.innerHTML=A.map(function(x){var y=S.rows.find(function(z){return z.c===x.c;});return'<div class="airline"><div class="airline-logo" style="background:'+x.o+'"><span>'+x.c.slice(0,2)+'</span></div><div><strong>'+x.n+'</strong><small>'+x.r+(y?" . ¥"+y.pr:"")+'</small></div><span class="tag">'+(y?y.st:"待同步")+'</span></div>';}).join("");e.flightRows.innerHTML=r.length?r.map(function(x){return'<tr><td><div class="carrier-cell"><div class="airline-logo" style="background:'+x.o+'"><span>'+x.c.slice(0,2)+'</span></div><div><strong>'+x.n+'</strong></div></div></td><td>'+x.fn+'</td><td>'+x.dp+"-"+x.ar+'</td><td>PVG-NRT</td><td>'+x.md+'</td><td>'+S.cabin+'</td><td class="price">¥'+x.pr+'</td><td class="change '+(x.ch>0?"up":"down")+'">'+(x.ch>0?"+":"")+'¥'+x.ch+'</td><td>'+x.st+'</td></tr>';}).join(""):'<tr><td colspan="9"><div class="empty">Loopy 没有找到符合条件的航班</div></td></tr>';e.resultText.textContent=r.length+" 条结果";var aa=a.filter(function(x){return x.pr<=S.maxPrice;});if(aa.length)st(aa.length+" 个航班低于提醒价");}
 
-    // ━━ Loopy 交互按钮 ━━
-    el.loopyAvatar.addEventListener(\"click\", () => {
-      showToast(\"Hi！我是 Loopy，粉色小浣熊 ~ 正在帮你监控机票！\");
-    });
-    el.loopyPopup.addEventListener(\"click\", () => {
-      showToast(\"Loopy 说：放心吧，我盯着呢！\");
-    });
+function st(m){e.toastMessage.textContent=m;e.toast.classList.add("show");clearTimeout(st.t);st.t=setTimeout(function(){e.toast.classList.remove("show");},3200);}
 
-    // ━━ 键盘快捷键 ━━
-    document.addEventListener(\"keydown\", event => {
-      if (event.key === \"ArrowRight\" && document.activeElement?.tagName !== \"INPUT\") nextDestinationImage();
-      if (event.key === \"ArrowLeft\" && document.activeElement?.tagName !== \"INPUT\") prevDestinationImage();
-      if (event.key === \"r\" && !event.ctrlKey && !event.metaKey && document.activeElement?.tagName !== \"INPUT\") refreshDestinationImage();
-    });
+function es(){var c="";c+=["航司","代码","类型","地区","航班","价格","状态"].map(function(x){return'"'+x+'"';}).join(",")+"\n";fl().forEach(function(r){c+=[r.n,r.c,r.l?"廉价":"全服务",r.r,r.fn,"¥"+r.pr,r.st].map(function(x){return'"'+String(x).replace(/"/g,'""')+'"';}).join(",")+"\n";});var b=new Blob(["\ufeff"+c],{type:"text/csv;charset=utf-8"});var u=URL.createObjectURL(b);var a=document.createElement("a");a.href=u;a.download="机票.csv";a.click();URL.revokeObjectURL(u);st("已导出");}
 
-    // ━━ 初始化 ━━
-    function init() {
-      el.departDate.value = todayPlus(1);
-      state.date = el.departDate.value;
-      const saved = JSON.parse(localStorage.getItem(\"flightMonitorApiConfig\") || \"{}\");
-      if (saved.url) document.getElementById(\"apiUrl\").value = saved.url;
-      if (saved.token) document.getElementById(\"apiToken\").value = saved.token;
-      if (saved.mapping) document.getElementById(\"apiMapping\").value = saved.mapping;
-      initLoopyFloating();
-      loadDestinationImages(state.to);
-      generateRows();
-      renderAll();
-      startTimer();
-      el.syncStatus.textContent = \"实时监控中\";
-    }
+function stt(){clearInterval(S.tt);S.tt=setInterval(function(){gn();ra();},S.interval*1000);e.syncStatus.textContent="每 "+S.interval+" 秒刷新";}
 
-    init();
-  </script>
+e.searchForm.addEventListener("submit",function(ev){ev.preventDefault();S.from=e.fromCity.value.trim()||"上海";S.to=e.toCity.value.trim()||"东京";S.date=e.departDate.value||(function(){var d=new Date();d.setDate(d.getDate()+1);return d.toISOString().slice(0,10);})();S.maxPrice=Number(e.maxPrice.value||650);S.interval=Number(e.interval.value||30);gn();lc(S.to);ra();stt();st(S.from+" 到 "+S.to+" 已更新");});
+e.swapBtn.addEventListener("click",function(){var f=e.fromCity.value;e.fromCity.value=e.toCity.value;e.toCity.value=f;S.to=e.toCity.value.trim()||S.to;lc(S.to);rd();});
+e.refreshPhotoBtn.addEventListener("click",function(){p=(p+2)%Math.max(1,I.length);si();rd();});
+e.refreshDestinationBtn.addEventListener("click",function(){p=(p+1)%Math.max(1,I.length);si();});
+e.nextPhotoBtn.addEventListener("click",function(){if(I.length){p=(p+1)%I.length;si();}});
+e.prevPhotoBtn.addEventListener("click",function(){if(I.length){p=(p-1+I.length)%I.length;si();}});
+document.querySelectorAll(".segmented button").forEach(function(b){b.addEventListener("click",function(){document.querySelectorAll(".segmented button").forEach(function(x){x.classList.remove("active");});b.classList.add("active");S.cabin=b.dataset.cabin;});});
+e.filters.addEventListener("change",function(ev){S.filters[ev.target.value]=ev.target.checked;ra();});
+e.tableSearch.addEventListener("input",function(){ra();});
+e.exportBtn.addEventListener("click",es);
+e.apiBtn.addEventListener("click",function(){e.apiModal.classList.add("open");});
+e.closeApi.addEventListener("click",function(){e.apiModal.classList.remove("open");});
+e.apiModal.addEventListener("click",function(ev){if(ev.target===e.apiModal)e.apiModal.classList.remove("open");});
+e.saveApi.addEventListener("click",function(){localStorage.setItem("fc",JSON.stringify({url:e.apiUrl.value,token:e.apiToken.value}));e.apiModal.classList.remove("open");st("已保存");});
+e.resetApi.addEventListener("click",function(){localStorage.removeItem("fc");e.apiUrl.value="";e.apiToken.value="";st("已重置");});
+e.loopyAvatar.addEventListener("click",function(){st("Hi！我是 Loopy！");});
+e.loopyPopup.addEventListener("click",function(){st("Loopy 说：放心吧！");});
+
+gn();lc(S.to);ra();stt();
+},100);
+})();
+</script>
 </body>
-</html>"
-
+</html>
