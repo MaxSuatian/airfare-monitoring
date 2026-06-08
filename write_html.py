@@ -1,4 +1,7 @@
-<!doctype html>
+# -*- coding: utf-8 -*-
+import os
+
+html = """<!doctype html>
 <html>
 <head>
 <meta charset="utf-8" />
@@ -27,22 +30,28 @@ body{font-family:Arial,Microsoft YaHei,sans-serif;background:#FFF0F5;color:#3D2C
 </div>
 <div class="hero">
   <img src="loopy.jpg" alt="Loopy" />
-  <h2>♡ 和 Loopy 一起出发吧 ♡</h2>
+  <h2>\u2661 和 Loopy 一起出发吧 \u2661</h2>
   <p>粉色小浣熊帮你盯着机票价格</p>
   <p id="clock" style="font-size:12px;color:#ccc;margin-top:8px;">加载中...</p>
 </div>
 <div class="card">
-  <h3>✈ 实时价格</h3>
-  <div class="price-item"><span>北京 → 上海</span><span class="price">¥480</span></div>
-  <div class="price-item"><span>北京 → 广州</span><span class="price">¥650</span></div>
-  <div class="price-item"><span>北京 → 成都</span><span class="price">¥520</span></div>
-  <div class="price-item"><span>北京 → 杭州</span><span class="price">¥390</span></div>
-  <div class="price-item"><span>北京 → 三亚</span><span class="price">¥780</span></div>
+  <h3>\u2708 实时价格</h3>
+  <div class="price-item"><span>北京 \u2192 上海</span><span class="price">\u00a5480</span></div>
+  <div class="price-item"><span>北京 \u2192 广州</span><span class="price">\u00a5650</span></div>
+  <div class="price-item"><span>北京 \u2192 成都</span><span class="price">\u00a5520</span></div>
+  <div class="price-item"><span>北京 \u2192 杭州</span><span class="price">\u00a5390</span></div>
+  <div class="price-item"><span>北京 \u2192 三亚</span><span class="price">\u00a5780</span></div>
 </div>
-<div class="footer">Loopy 机票监控 ♡ 每日更新</div>
+<div class="footer">Loopy 机票监控 \u2661 每日更新</div>
 <script>
 var d=new Date();document.getElementById("clock").textContent=d.toLocaleString("zh-CN");
 setInterval(function(){var d=new Date();document.getElementById("clock").textContent=d.toLocaleString("zh-CN");},1000);
 </script>
 </body>
 </html>
+"""
+
+fpath = r'C:\Users\x1 nano\Desktop\机票实时监控\index.html'
+with open(fpath, 'w', encoding='utf-8') as f:
+    f.write(html)
+print('OK! 写入完成, 大小:', len(html), 'bytes')
