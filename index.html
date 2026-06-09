@@ -967,31 +967,21 @@
       <aside class="side">
         <div class="panel">
           <form id="searchForm" class="section">
-            <h2>🩷 搜索航班</h2>
-            <p class="section-sub">Loopy 帮你找到最划算的机票</p>
-            <div class="form-grid">
-              <div class="field">
-                <label for="fromCity">出发城市</label>
-                <input type="text" id="fromCity" value="上海" placeholder="例如 上海" />
-                <input type="text" id="fromCity" value="上海" placeholder="例如 上海" list="cityOptions" autocomplete="off" />
-              <div class="field">
-                <label for="toCity">目的城市</label>
-                <div class="button-row">
-                  <input type="text" id="toCity" value="东京" placeholder="例如 东京" />
-                  <button type="button" id="swapBtn" class="btn icon-btn" title="交换出发地和目的地">⇄</button>
-              </div>
-              </div>
-              <div class="row-2">
-                <div class="field">
-                  <label for="departDate">出发日期</label>
-                  <input type="date" id="departDate" />
-                </div>
-                <div class="field">
-                  <label for="maxPrice">提醒价 (¥)</label>
-                  <input type="number" id="maxPrice" value="650" min="100" max="99999" />
-                </div>
-              </div>
-              <div class="field">
+<h2>🥷 搜索航班</h2>
+<p class="section-sub">Loopy 帮你找到最划算的机票</p>
+<div class="form-grid">
+<div class="field"><label for="fromCity">出发城市</label>
+<input type="text" id="fromCity" value="上海" placeholder="城市名" list="cityOptions" autocomplete="off" /></div>
+<div class="field"><label for="toCity">到达城市</label>
+<div style="display:flex;gap:6px;align-items:center">
+<input type="text" id="toCity" value="东京" placeholder="城市名" list="cityOptions" autocomplete="off" style="flex:1" />
+<button type="button" id="swapBtn" class="btn icon-btn" style="width:42px;height:42px;padding:0;flex-shrink:0" title="交换出发地和目的地">⇄</button>
+</div></div>
+<div class="row-2">
+<div class="field"><label for="departDate">出发日期</label><input type="date" id="departDate" /></div>
+<div class="field"><label for="maxPrice">预算上限 (¥)</label><input type="number" id="maxPrice" value="650" min="100" max="99999" /></div>
+</div>
+<div class="field">
                 <label for="tripType">行程类型</label>
                 <select id="tripType">
                   <option>单程</option>
@@ -1000,7 +990,7 @@
                 </select>
               </div>
               <div class="field">
-                <label for="interval">刷新间隔 (秒)</label>
+                <label for="interval">刷新间隔</label>
                 <select id="interval">
                   <option value="15">15 秒</option>
                   <option value="30" selected>30 秒</option>
@@ -1008,10 +998,9 @@
                   <option value="300">5 分钟</option>
                 </select>
               </div>
-              <button type="submit" class="btn">🩷 开始监控</button>
-            </div>
-          </form>
-
+              <button type="submit" class="btn" style="height:48px;font-size:17px;border-radius:12px;background:linear-gradient(135deg,#FF8FAB,#E8608C)">🥷 搜索低价机票</button>
+</div>
+</form>
           <datalist id="cityOptions">
             <option value="上海"></option><option value="北京"></option><option value="广州"></option><option value="深圳"></option>
             <option value="成都"></option><option value="杭州"></option><option value="重庆"></option><option value="西安"></option>
@@ -1022,11 +1011,7 @@
             <option value="洛杉矶"></option><option value="旧金山"></option><option value="悉尼"></option><option value="墨尔本"></option>
             <option value="普吉岛"></option><option value="巴厘岛"></option><option value="清迈"></option><option value="三亚"></option>
           </datalist>
-
-          <div class="section">
-            <h2>🩷 舱位选择</h2>
-            <div class="segmented" style="margin-top:12px">
-              <button type="button" data-cabin="经济舱" class="active">经济舱</button>
+经济舱</button>
               <button type="button" data-cabin="超级经济舱">超级经济</button>
               <button type="button" data-cabin="商务舱">商务舱</button>
             </div>
@@ -1054,7 +1039,7 @@
             <h2>🩷 热门航线</h2>
             <div class="airline-list" id="airlineList"></div>
           </div>
-        </div>
+        
       </aside>
 
       <div class="content">
@@ -1166,10 +1151,10 @@
           </div>
         </div>
       </div>
-    </div>
+    
 
     
-      </div>
+      
 <div class="toast" id="toast"></div>
 
     <div class="modal-backdrop" id="apiModal">
@@ -1221,7 +1206,7 @@
 
     function pad(n) { return String(n).padStart(2, "0"); }
     function randomBetween(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
-    const logoFor = domain => `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+    const logoFor = domain => `https://icons.duckduckgo.com/ip3/${domain}.ico`;
 
     const airlines = [
       { code:"CA", name:"中国国际航空", region:"内地", lowCost:false, domain:"airchina.com.cn", color:"#be1e2d" },
@@ -1427,76 +1412,34 @@
       return motifs[icon] || motifs.generic;
     }
 
+        function getCityPhotoUrl(city, seed) {
+      const key = city.replace(/[\s\u5e02]/g, "");
+      return "https://picsum.photos/seed/" + key + seed + "/900/560";
+    }
+
     function makeDestinationImage(city, profile) {
-      const palette = profile.palette;
-      const [gold, red, teal] = palette;
-      const offset = (state.artSeed % 5) * 10;
       const chips = profile.chips.slice(0, 3).map(escapeXml);
       while (chips.length < 3) chips.push("当地风情");
-      const svg = `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" role="img" aria-label="${escapeXml(city)}民俗风情景点照">
-          <defs>
-            <linearGradient id="sky" x1="0" x2="1" y1="0" y2="1">
-              <stop offset="0" stop-color="#FFE4EC"/>
-              <stop offset=".52" stop-color="${gold}"/>
-              <stop offset="1" stop-color="#FFF0F5"/>
-            </linearGradient>
-            <radialGradient id="sun" cx=".28" cy=".2" r=".36">
-              <stop offset="0" stop-color="#FFF0F5"/>
-              <stop offset="1" stop-color="#FFB3C6" stop-opacity="0"/>
-            </radialGradient>
-            <filter id="grain">
-              <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="${state.artSeed + 4}"/>
-              <feColorMatrix type="saturate" values=".18"/>
-              <feBlend mode="soft-light" in2="SourceGraphic"/>
-            </filter>
-          </defs>
-          <rect width="900" height="560" fill="url(#sky)"/>
-          <rect width="900" height="560" fill="url(#sun)"/>
-          <circle cx="${190 + offset}" cy="112" r="64" fill="#FFF0F5" opacity=".76"/>
-          <path d="M0 348c90-80 180-88 274-34 94 54 164 42 252-6 120-64 226-50 374 34v218H0z" fill="${teal}" opacity=".18"/>
-          <path d="M0 402c104-62 190-56 274-22 94 38 174 26 258-10 126-54 228-38 368 38v152H0z" fill="#FFF0F5"/>
-          <g transform="translate(618 44)">
-            <rect width="236" height="134" rx="22" fill="#FFF0F5" opacity=".9"/>
-            <text x="20" y="34" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="18" font-weight="800" fill="#6B2E4A">Loopy 推荐特色</text>
-            <circle cx="26" cy="68" r="8" fill="${red}"/>
-            <text x="44" y="74" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="15" font-weight="700" fill="#6B3D55">${escapeXml(profile.landmark)}</text>
-            <circle cx="26" cy="98" r="8" fill="${teal}"/>
-            <text x="44" y="104" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="15" font-weight="700" fill="#6B3D55">${escapeXml(profile.folk)}</text>
-          </g>
-          ${sceneMotif(profile.icon, palette, city)}
-          <g transform="translate(552 426)">
-            <rect x="0" y="0" width="92" height="34" rx="17" fill="#FFF0F5" opacity=".9"/>
-            <rect x="104" y="0" width="110" height="34" rx="17" fill="#FFF0F5" opacity=".9"/>
-            <rect x="226" y="0" width="94" height="34" rx="17" fill="#FFF0F5" opacity=".9"/>
-            <text x="18" y="23" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="800" fill="#6B2E4A">${chips[0]}</text>
-            <text x="122" y="23" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="800" fill="#6B2E4A">${chips[1]}</text>
-            <text x="244" y="23" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="800" fill="#6B2E4A">${chips[2]}</text>
-          </g>
-          <g transform="translate(${190 + offset} 255)">
-            <path d="M0 72c28-64 86-92 142-56 44 28 38 104-24 126C48 166-22 124 0 72Z" fill="#FFF0F5"/>
-            <path d="M32 58c36-48 88-48 116-4" fill="none" stroke="${red}" stroke-width="14" stroke-linecap="round"/>
-            <circle cx="50" cy="78" r="8" fill="#3D2C3D"/>
-            <circle cx="106" cy="78" r="8" fill="#3D2C3D"/>
-            <path d="M62 108c18 14 42 14 62 0" fill="none" stroke="#3D2C3D" stroke-width="8" stroke-linecap="round"/>
-            <path d="M-28 150c58-36 138-36 198 0v64H-28z" fill="${red}" opacity=".92"/>
-            <path d="M16 158c26 18 66 18 96 0" fill="none" stroke="${gold}" stroke-width="10" stroke-linecap="round"/>
-          </g>
-          <g opacity=".9">
-            <circle cx="98" cy="438" r="20" fill="${red}"/>
-            <circle cx="146" cy="424" r="14" fill="${gold}"/>
-            <circle cx="748" cy="420" r="18" fill="${red}"/>
-            <circle cx="794" cy="446" r="13" fill="${gold}"/>
-            <path d="M108 462v34M748 444v34" stroke="#7B3D6B" stroke-width="5" stroke-linecap="round"/>
-          </g>
-          <path d="M0 500c120-24 232-20 336 0s212 22 330 0c84-16 162-14 234 6v54H0z" fill="${teal}" opacity=".2"/>
-          <rect x="30" y="32" width="230" height="68" rx="18" fill="#FFF0F5" opacity=".88"/>
-          <text x="54" y="61" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="20" font-weight="800" fill="#6B2E4A">Loopy AI 绘图</text>
-          <text x="54" y="86" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="16" fill="#8C6B7A">${escapeXml(city)} · ${escapeXml(profile.folk)}</text>
-          <rect width="900" height="560" fill="transparent" filter="url(#grain)" opacity=".12"/>
-        </svg>
-      `;
-      return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+      const url = encodeURIComponent(getCityPhotoUrl(city, state.artSeed));
+      const chipsHtml = chips.map((c, i) =>
+        '<rect x="' + (i*115) + '" y="0" width="105" height="36" rx="18" fill="rgba(255,255,255,.9)"/>' +
+        '<text x="' + (i*115+14) + '" y="24" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="700" fill="#6B2E4A">' + c + '</text>'
+      ).join("");
+      var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" role="img" aria-label="' + escapeXml(city) + '\u98ce\u666f\u7167" width="100%" height="100%">' +
+        '<defs><linearGradient id="sky2" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#FFE4EC"/><stop offset=".52" stop-color="#FFB3C6"/><stop offset="1" stop-color="#FFF0F5"/></linearGradient></defs>' +
+        '<rect width="900" height="560" fill="url(#sky2)"/>' +
+        '<image href="' + url + '" x="0" y="0" width="900" height="560" preserveAspectRatio="xMidYMid slice" opacity="0.88"/>' +
+        '<rect x="0" y="380" width="900" height="180" fill="url(#sky2)" opacity="0.7"/>' +
+        '<rect x="30" y="30" width="180" height="60" rx="16" fill="rgba(255,255,255,.88)"/>' +
+        '<text x="50" y="68" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="24" font-weight="800" fill="#6B2E4A">' + escapeXml(city) + '</text>' +
+        '<g transform="translate(30 420)">' + chipsHtml + '</g>' +
+        '<rect x="620" y="430" width="250" height="100" rx="16" fill="rgba(255,255,255,.88)"/>' +
+        '<text x="640" y="462" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="15" font-weight="800" fill="#E8608C">' + escapeXml(profile.landmark) + '</text>' +
+        '<text x="640" y="490" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="13" fill="#8C6B7A">' + escapeXml(profile.folk) + '</text>' +
+        '<text x="640" y="516" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="11" fill="#C48BB5">Loopy \u63a8\u8350 \u00b7 \u5b9e\u666f\u56fe</text>' +
+        '<circle cx="855" cy="40" r="22" fill="rgba(255,255,255,.7)"/><text x="842" y="49" font-family="sans-serif" font-size="16" fill="#E8608C">L</text>' +
+        '</svg>';
+      return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
     }
 
     function renderDestination() {
@@ -1508,7 +1451,7 @@
       el.destinationTitle.textContent = `${city}民俗风情景点照`;
       el.destinationDesc.textContent = profile.desc;
       el.destinationChips.innerHTML = profile.chips.map(item => `<span class="destination-chip">${item}</span>`).join("");
-      el.destinationPrompt.textContent = destinationPrompt(city, profile);
+      el.destinationPrompt.textContent = "Loopy \u63a8\u8350 " + city + " \u5b9e\u666f \u00b7 " + profile.landmark;
       // · ${profile.folk} · 粉色小浣熊精选景点 🩷`;
     }
 
