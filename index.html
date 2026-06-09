@@ -1360,7 +1360,7 @@
     function airlineLogo(airline) {
       if (airline.domain && !airline.logo) { airline.logo = logoFor(airline.domain); }
       if (airline.logo) {
-        return `<div class="airline-logo"><img src="${escapeXml(airline.logo)}" alt="${escapeXml(airline.code)}" loading="lazy"/></div>`;
+        return `<div class="airline-logo"><img src="${escapeXml(airline.logo)}" alt="${escapeXml(airline.code)}" loading="lazy" onerror="this.remove(); this.parentElement.textContent='${escapeXml(airline.code)}';" /></div>`;
       }
       return `<div class="airline-logo">${escapeXml(airline.code.slice(0, 2))}</div>`;
     }
@@ -1501,7 +1501,7 @@
       const city = state.to;
       const profile = destinationProfile(city);
       el.destinationPhoto.src = makeDestinationImage(city, profile);
-      el.destinationPhoto.alt = `${city}${profile.landmark}民俗风情景点照`;
+      el.destinationPhoto.alt = `${city} ${profile.landmark} 民俗风情景点照`;
       el.destinationBadge.textContent = `${city} · AI 景点照`;
       el.destinationTitle.textContent = `${city}民俗风情景点照`;
       el.destinationDesc.textContent = profile.desc;
